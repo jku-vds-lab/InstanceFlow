@@ -1,33 +1,45 @@
-.App {
-  text-align: center;
+.tooltip-container {
+    position: relative;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+/* Tooltip text */
+.tooltip-container .tooltip-text {
+    visibility: hidden;
+    min-width: 100px;
+    width: auto;
+    white-space: nowrap;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    font-size: 12px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: 0s visibility;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.box.tooltip-container .tooltip-text {
+    bottom: 200%;
 }
 
-.App-link {
-  color: #61dafb;
+.tooltip-container .tooltip-text::after {
+    content: " ";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border: 5px solid transparent;
+    border-top-color: black;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.tooltip-container:hover > .tooltip-text {
+    visibility: visible;
+}
+
+.tooltip-container:hover > .tooltip-text:hover {
+    opacity: 0;
 }

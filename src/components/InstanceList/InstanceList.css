@@ -1,0 +1,5 @@
+.instance-list {
+    display: grid;
+    /*flex-wrap: wrap;
+    justify-content: center;*/
+}

@@ -1,0 +1,31 @@
+.instance-detail-row {
+    display: flex;
+    text-align: center;
+    align-items: center;
+}
+
+.instance-detail-row > * {
+    flex: 1;
+}
+
+.bar-chart-container {
+    height: 20px;
+}
+
+.box-img {
+    border: 5px solid transparent;
+    width: 24px;
+    height: 24px;
+}
+
+.box-img {
+    transition: all .2s ease-in-out;
+}
+
+.box-img:hover {
+    transform: scale(2.5);
+}
+
+.box-img[data-active='active'] {
+    border: 5px solid gold;
+}
