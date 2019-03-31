@@ -3,11 +3,11 @@ import "./InstanceItem.css";
 import {withData} from "../DataProvider";
 
 const InstanceItem = (props) => {
-  const {instance, index} = props;
-  const {epochs, getLabel, getColor, getIncludedOrOtherColor} = props.data;
+  const {instance, epochs} = props;
+  const {getLabel, getColor, getIncludedOrOtherColor, activateInstances, deactivateInstances} = props.data;
 
   const distributionPairs = epochs.reduce((acc, curr) => {
-    const predicted = curr.classifications[index].predicted;
+    const predicted = curr.classifications[instance.index].predicted;
     const lastIndex = acc.length - 1;
     const lastElement = acc[lastIndex];
 
@@ -22,7 +22,22 @@ const InstanceItem = (props) => {
   return <div className="instance-detail-row">
     <span>{instance.id}</span>
     <div>
-      <img className="box-img" src={instance.image} data-id={instance.id}/>
+      <img className={`box-img ${instance.active ? "active" : ""}`} src={instance.image} data-id={instance.id} alt={`Instance ${instance.id}`}
+           onMouseOver={e => {
+             if (!instance.clicked)
+               activateInstances({lines: true}, instance.id)
+           }}
+           onMouseOut={e => {
+             if (!instance.clicked)
+               deactivateInstances(false, instance.id);
+           }}
+           onClick={e => {
+             if (!instance.clicked) {
+               activateInstances({clicked: true, lines: true}, instance.id);
+             } else {
+               activateInstances({clicked: true, lines: false}, instance.id);
+             }
+           }}/>
     </div>
     <span style={{
       color: getColor(instance.actual)

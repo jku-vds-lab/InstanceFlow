@@ -1,0 +1,34 @@
+
+.sankey-bar {
+    opacity: 0.2;
+    pointer-events: all;
+}
+
+.sankey-bar[data-correct='false'] {
+    opacity: 0.3;
+    /*
+    stroke: red;
+    stroke-linecap: round;
+    stroke-miterlimit: 10;
+    stroke-opacity: 0.2;
+    stroke-width: 10px;
+    stroke-linejoin: round;
+    */
+}
+
+.sankey-bar[data-which='8'] {
+    /*fill: gold;
+    opacity: 0.8;*/
+}
+
+.sankey-bar[data-correct='true'] {
+    opacity: 0.1;
+}
+
+.sankey-bar:hover {
+    opacity: 0.4;
+}
+
+.sankey-bar.active {
+    opacity: 0.6;
+}

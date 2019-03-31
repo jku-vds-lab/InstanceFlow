@@ -6,19 +6,34 @@ const DataContext = createContext({});
 const DataProvider = (props) => {
   const [data, setData] = useState(null);
   const [epochs, setEpochs] = useState([]);
-  const [classes, setClasses] = useState([3, 5]);
+  const [instances, setInstances] = useState([]);
+  const [activeInstances, setActiveInstances] = useState(new Set());
+  const [boxElements, setBoxElements] = useState(new Map());
+  const [containerElements, setContainerElements] = useState(new Map());
+  const [classes, setClasses] = useState([0]);
   const [from, setFrom] = useState(20);
-  const [to, setTo] = useState(25);
+  const [to, setTo] = useState(22);
+  const [loading, setLoading] = useState(true);
+  const [maxInstancesPerPredictedClass, setMaxInstancesPerPredictedClass] = useState(0);
+  const [maxInstancesPerClass, setMaxInstancesPerClass] = useState(0);
+  const [colors, setColors] = useState(["#ff0029", "#377eb8", "#66a61e", "#984ea3", "#00d2d5", "#ff7f00", "#af8d00", "#7f80cd", "#b3e900", "#c42e60", "lightgray"]);
 
   useEffect(() => {
-    console.log("EXE");
     setData(initializeData(datasets.CIFAR10));
   }, []);
 
   useEffect(() => {
-    console.log("ALL");
-    if (data)
-      prepareEpochs();
+    setLoading(true);
+    if (data) {
+      setEpochs(prepareEpochs());
+      // setting new instances
+      setInstances(
+        data.instances.map((instance, index) => {
+          instance.index = index;
+          return instance;
+        }).filter(instance => instance.display))
+    }
+    setLoading(false);
   }, [data, from, to, classes]);
 
   const initializeData = (data) => {
@@ -86,14 +101,16 @@ const DataProvider = (props) => {
     // Prepare epoch meta array
     prepareEpochMeta(slicedEpochs);
     annotateEpochMeta(slicedEpochs);
-
-    setEpochs(slicedEpochs);
+    return slicedEpochs;
   };
 
   const prepareInstanceMeta = () => {
     data.instances.forEach(instance => {
       instance.score = 0;
       instance.display = false;
+      instance.active = activeInstances.has(instance.id);
+      instance.clicked = activeInstances.has(instance.id);
+      instance.lines = activeInstances.has(instance.id);
     });
   };
 
@@ -147,23 +164,33 @@ const DataProvider = (props) => {
   };
 
   const annotateEpochMeta = (epochData) => {
+    let maxInstancesPerClassPredictionTemp = maxInstancesPerPredictedClass;
+    let maxInstancesPerClassTemp = maxInstancesPerClass;
     epochData.forEach((epoch, eIndex) => {
       epoch.classifications.forEach((classification, cIndex) => {
         let nextClassification;
-        let previousClassification;
+        //let previousClassification;
         if (epochData[eIndex + 1])
           nextClassification = epochData[eIndex + 1].classifications[cIndex];
-        if (epochData[eIndex - 1])
-          previousClassification = epochData[eIndex - 1].classifications[cIndex];
+        //if (epochData[eIndex - 1])
+        //  previousClassification = epochData[eIndex - 1].classifications[cIndex];
 
         const instance = data.instances[cIndex];
 
         if (instance.display) {
           const instanceStats = epoch.stats[getIncludedOrOtherIndex(classification.predicted)];
           instanceStats.total = (instanceStats.total || 0) + 1;
+          if (maxInstancesPerClassTemp < instanceStats.total) {
+            maxInstancesPerClassTemp = instanceStats.total;
+          }
+
 
           instanceStats.predicted[getIncludedOrOtherIndex(instance.actual)] =
             (instanceStats.predicted[getIncludedOrOtherIndex(instance.actual)] || 0) + 1;
+          if (maxInstancesPerClassPredictionTemp < instanceStats.predicted[getIncludedOrOtherIndex(instance.actual)]) {
+            maxInstancesPerClassPredictionTemp = instanceStats.predicted[getIncludedOrOtherIndex(instance.actual)];
+          }
+
 
           if (nextClassification) {
             if (!instanceStats.to[getIncludedOrOtherIndex(nextClassification.predicted)]) {
@@ -183,6 +210,8 @@ const DataProvider = (props) => {
         }
       });
     });
+    setMaxInstancesPerPredictedClass(maxInstancesPerClassPredictionTemp);
+    setMaxInstancesPerClass(maxInstancesPerClassTemp);
   };
 
   const getIncludedOrOtherIndex = (index) => {
@@ -193,7 +222,7 @@ const DataProvider = (props) => {
     return (classes.includes(index) ? getColor(index) : getColor(getOtherClassIndex()));
   };
 
-  const getDefaultClassesWithOther = () => {
+  const getClassesWithOther = () => {
     const newClasses = [...classes];
     newClasses.splice(parseInt(classes.length / 2), 0, 10);
     return newClasses;
@@ -208,24 +237,106 @@ const DataProvider = (props) => {
   };
 
   const getColor = (index) => {
-    return ["#ff0029", "#377eb8", "#66a61e", "#984ea3", "#00d2d5", "#ff7f00", "#af8d00", "#7f80cd", "#b3e900", "#c42e60", "lightgray"][index];
+    return colors[index];
   };
 
   return (
     <DataContext.Provider value={{
-      data, setData,
       to, setTo,
       from, setFrom,
       classes, setClasses,
+      activeInstances, setActiveInstances,
+      labels: data ? data.labels : [],
+      labelsWithOther: data ? [...data.labels, "Other"] : [],
       epochs, setEpochs,
+      instances, setInstances, updateInstance: (instance, props) => {
+        setInstances(instances => instances.map(i => i.id === instance.id ? {
+          ...i,
+          ...props
+        } : i));
+      },
+      updateInstanceClientRect: (instance, props) => {
+        setInstances(instances => instances.map(i => i.id === instance.id ? {
+          ...i,
+          rect: {
+            ...i.rect,
+            ...props
+          }
+        } : i));
+      },
+      activateInstances: (config = {}, ...instanceIds) => {
+        setActiveInstances(activeInstances => {
+          const res = new Set(activeInstances);
+          instanceIds.forEach(id => res.add(id));
+          return res;
+        });
+        setInstances(instances => instances.map(instance => instanceIds.includes(instance.id) ? {
+          ...instance,
+          active: true,
+          clicked: config.clicked === "invert" ? !instance.clicked : config.clicked === undefined ? instance.clicked : config.clicked,
+          lines: config.lines === "invert" ? !instance.lines : config.lines === undefined ? instance.lines : config.lines
+        } : instance));
+      },
+      deactivateInstances: (force = false, ...instanceIds) => {
+        setActiveInstances(activeInstances => {
+          const res = new Set(activeInstances);
+          //instanceIds.forEach(id => res.delete(id));
+          setInstances(instances => instances.map(instance => {
+            if(!instance.clicked || force) {
+              res.delete(instance.id);
+              return {
+                ...instance,
+                active: false,
+                clicked: false,
+                lines: false
+              }
+            }
+            return instance;
+          }));
+          return res;
+        });
+      },
+      boxElements, setBoxElements, updateBoxElements: (instanceId, epochId, boxElement) => {
+        setBoxElements(boxElements => {
+          const res = new Map(boxElements);
+          const curr = res.get(instanceId) || new Map();
+          if (!boxElement) {
+            curr.delete(epochId);
+          } else {
+            curr.set(epochId, boxElement);
+          }
+          res.set(instanceId, curr);
+          return res;
+        });
+      },
+      containerElements, setContainerElements, updateContainerElements: (clazz, epochId, containerElement) => {
+        setContainerElements(containerElements => {
+          const res = new Map(containerElements);
+          const curr = res.get(clazz) || new Map();
+          if (!containerElement) {
+            curr.delete(epochId);
+          } else {
+            curr.set(epochId, containerElement);
+          }
+          res.set(clazz, curr);
+          return res;
+        });
+      },
+      maxInstancesPerPredictedClass,
+      maxInstancesPerClass,
+      loading,
+      colors, setColors,
       getLabel,
       getColor,
-      getIncludedOrOtherColor
+      getIncludedOrOtherColor,
+      getClassesWithOther,
+      getIncludedOrOtherIndex
     }}>
       {props.children}
     </DataContext.Provider>
   )
 };
+
 const DataConsumer = DataContext.Consumer;
 
 export {DataProvider, DataConsumer}

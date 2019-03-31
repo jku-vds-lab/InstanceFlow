@@ -16,10 +16,10 @@
     border-radius: 6px;
     position: absolute;
     z-index: 1;
+    opacity: 1 !important;
     bottom: 110%;
     left: 50%;
     transform: translateX(-50%);
-    transition: 0s visibility;
 }
 
 .box.tooltip-container .tooltip-text {
@@ -27,13 +27,13 @@
 }
 
 .tooltip-container .tooltip-text::after {
-    content: " ";
+    /*content: " ";
     position: absolute;
-    top: 100%; /* At the bottom of the tooltip */
+    top: 100%;
     left: 50%;
     margin-left: -5px;
     border: 5px solid transparent;
-    border-top-color: black;
+    border-top-color: black;*/
 }
 
 .tooltip-container:hover > .tooltip-text {
@@ -43,3 +43,8 @@
 .tooltip-container:hover > .tooltip-text:hover {
     opacity: 0;
 }
+
+.tooltip-container > .tooltip-text:hover {
+    visibility: hidden;
+}
+
