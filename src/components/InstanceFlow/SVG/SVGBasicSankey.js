@@ -1,7 +1,9 @@
-import React, {PureComponent} from "react";
-import "./SVGBasicSankey.css"
+import React, {Component, PureComponent} from "react";
+import "./SVGBasicSankey.css";
+import ReactTooltip from "react-tooltip";
 
-class SVGBasicSankey extends PureComponent {
+
+class SVGBasicSankey extends Component {
   state = {
     clicked: false
   };
@@ -28,6 +30,8 @@ class SVGBasicSankey extends PureComponent {
     const instanceIds = this.getInstanceIdsFromSankey(sourceClass, targetClass, fromClass, epoch, nextEpoch);
 
     return <path
+      data-tip={text}
+      data-effect="float"
       className={"sankey-bar " + (clicked ? "active" : "")}
       xmlns="http://www.w3.org/2000/svg"
       d={"M" + startX + " " + startY +
@@ -38,10 +42,10 @@ class SVGBasicSankey extends PureComponent {
       fill={color}
       stroke="none"
       onMouseOver={e => {
-          activateInstances(undefined, ...instanceIds)
+        activateInstances(undefined, ...instanceIds)
       }}
       onMouseOut={e => {
-          deactivateInstances(false, ...instanceIds);
+        deactivateInstances(false, ...instanceIds);
       }}
       onClick={e => {
         if (!clicked) {
@@ -52,7 +56,7 @@ class SVGBasicSankey extends PureComponent {
           activateInstances({clicked: false, lines: false}, ...instanceIds);
         }
       }}
-    ><title xmlns="http://www.w3.org/2000/svg">{text}</title></path>
+    />
   }
 }
 

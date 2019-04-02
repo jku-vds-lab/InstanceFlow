@@ -1,10 +1,9 @@
-import React, {PureComponent} from "react";
+import React, {Component} from "react";
 import {withData} from "../DataProvider";
 import "./InstanceEpochContainer.css"
 import InstanceClassContainer from "./InstanceClassContainer";
 
-class InstanceEpochContainer extends PureComponent {
-
+class InstanceEpochContainer extends Component {
   render() {
     const {instances, classes, epoch} = this.props;
     const {getIncludedOrOtherIndex} = this.props.data;

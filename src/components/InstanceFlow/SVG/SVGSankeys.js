@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {withData} from "../../DataProvider";
 import SVGBasicSankey from "./SVGBasicSankey";
+import ReactTooltip from "react-tooltip";
 
 class SVGSankeys extends Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -8,6 +9,10 @@ class SVGSankeys extends Component {
       this.props.svgBounds.width !== nextProps.svgBounds.width ||
       this.props.svgBounds.height !== nextProps.svgBounds.height ||
       this.props.containerElements !== nextProps.containerElements;
+  }
+
+  componentDidUpdate() {
+    ReactTooltip.rebuild()
   }
 
   render() {

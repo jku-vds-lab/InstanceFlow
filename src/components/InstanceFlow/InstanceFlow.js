@@ -3,6 +3,7 @@ import {withData} from "../DataProvider";
 import "./InstanceFlow.css"
 import InstanceEpochContainer from "./InstanceEpochContainer";
 import InstanceFlowSVG from "./SVG/FlowSVG";
+import ReactTooltip from "react-tooltip";
 
 class InstanceFlow extends Component {
   render() {

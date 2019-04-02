@@ -1,6 +1,8 @@
 import React from "react";
 import "./InstanceItem.css";
-import {withData} from "../DataProvider";
+import {DataProvider, withData} from "../DataProvider";
+import MainPage from "../MainPage";
+import ReactTooltip from "react-tooltip";
 
 const InstanceItem = (props) => {
   const {instance, epochs} = props;
@@ -22,7 +24,8 @@ const InstanceItem = (props) => {
   return <div className="instance-detail-row">
     <span>{instance.id}</span>
     <div>
-      <img className={`box-img ${instance.active ? "active" : ""}`} src={instance.image} data-id={instance.id} alt={`Instance ${instance.id}`}
+      <img className={`box-img ${instance.active ? "active" : ""}`} src={instance.image} data-id={instance.id}
+           alt={`Instance ${instance.id}`}
            onMouseOver={e => {
              if (!instance.clicked)
                activateInstances({lines: true}, instance.id)
@@ -35,7 +38,7 @@ const InstanceItem = (props) => {
              if (!instance.clicked) {
                activateInstances({clicked: true, lines: true}, instance.id);
              } else {
-               activateInstances({clicked: true, lines: false}, instance.id);
+               activateInstances({clicked: false, lines: false}, instance.id);
              }
            }}/>
     </div>
@@ -46,11 +49,12 @@ const InstanceItem = (props) => {
       flex: 2
     }}>
       {distributionPairs.map((pair, i) =>
-        <div key={i} className="bar-chart tooltip-container" style={{
-          flex: pair[1], "--box-color": getIncludedOrOtherColor(pair[0])
-        }}>
-          <div className="tooltip-text">{pair[1]} {getLabel(pair[0])}(s)</div>
-        </div>
+        <div key={i}
+             data-tip={`${pair[1]} ${getLabel(pair[0])}(s)`}
+             className="bar-chart"
+             style={{
+               flex: pair[1], "--box-color": getIncludedOrOtherColor(pair[0])
+             }}/>
       )}
     </div>
     <span>{instance.classesVisitedNum}</span>

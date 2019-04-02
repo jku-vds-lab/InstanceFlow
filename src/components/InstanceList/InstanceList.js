@@ -15,7 +15,7 @@ const InstanceList = (props) => {
       <b>Variability</b>
       <b>Score</b>
     </div>
-    {instances.filter(instance => instance.display).map(instance =>
+    {instances.concat().sort((i1, i2) => i2.clicked - i1.clicked || 0).filter(instance => instance.display).map(instance =>
       <InstanceItem key={instance.id} instance={instance} epochs={epochs} />
     )}
   </div>;

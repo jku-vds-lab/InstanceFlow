@@ -4,6 +4,8 @@ import datasets from "../data/data.js";
 const DataContext = createContext({});
 
 const DataProvider = (props) => {
+  const [sortMetric, setSortMetric] = useState("none");
+  const [opacityMetric, setOpacityMetric] = useState("score");
   const [data, setData] = useState(null);
   const [epochs, setEpochs] = useState([]);
   const [instances, setInstances] = useState([]);
@@ -27,14 +29,25 @@ const DataProvider = (props) => {
     if (data) {
       setEpochs(prepareEpochs());
       // setting new instances
-      setInstances(
-        data.instances.map((instance, index) => {
+      setInstances(sortInstances(data.instances
+        .map((instance, index) => {
           instance.index = index;
           return instance;
-        }).filter(instance => instance.display))
+        })
+        .filter(instance => instance.display)));
     }
     setLoading(false);
   }, [data, from, to, classes]);
+
+  useEffect(() => {
+    setInstances(instances => sortInstances(instances));
+  }, [sortMetric]);
+
+  const sortInstances = (instances) => {
+    return instances.sort((i1, i2) => {
+      return i1.actual - i2.actual || i1[sortMetric] - i2[sortMetric] || i1.score - i2.score || 0;
+    });
+  };
 
   const initializeData = (data) => {
     return annotateInstanceData(data);
@@ -270,19 +283,20 @@ const DataProvider = (props) => {
           instanceIds.forEach(id => res.add(id));
           return res;
         });
-        setInstances(instances => instances.map(instance => instanceIds.includes(instance.id) ? {
+        setInstances(instances => sortInstances(instances.map(instance => instanceIds.includes(instance.id) ? {
           ...instance,
           active: true,
           clicked: config.clicked === "invert" ? !instance.clicked : config.clicked === undefined ? instance.clicked : config.clicked,
           lines: config.lines === "invert" ? !instance.lines : config.lines === undefined ? instance.lines : config.lines
-        } : instance));
+        } : instance)));
+        //setInstances(sortInstances(instances));
       },
       deactivateInstances: (force = false, ...instanceIds) => {
         setActiveInstances(activeInstances => {
           const res = new Set(activeInstances);
           //instanceIds.forEach(id => res.delete(id));
-          setInstances(instances => instances.map(instance => {
-            if(!instance.clicked || force) {
+          setInstances(instances => sortInstances(instances.map(instance => {
+            if (instanceIds.includes(instance.id) && (!instance.clicked || force)) {
               res.delete(instance.id);
               return {
                 ...instance,
@@ -292,7 +306,7 @@ const DataProvider = (props) => {
               }
             }
             return instance;
-          }));
+          })));
           return res;
         });
       },
@@ -326,6 +340,8 @@ const DataProvider = (props) => {
       maxInstancesPerClass,
       loading,
       colors, setColors,
+      sortMetric, setSortMetric,
+      opacityMetric, setOpacityMetric,
       getLabel,
       getColor,
       getIncludedOrOtherColor,

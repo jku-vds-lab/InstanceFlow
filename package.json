@@ -1,11 +1,12 @@
 {
   "name": "squares_react",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
-    "react-scripts": "2.1.5"
+    "react-scripts": "2.1.5",
+    "react-tooltip": "^3.10.0"
   },
   "scripts": {
     "start": "react-scripts start",

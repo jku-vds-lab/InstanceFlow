@@ -1,10 +1,10 @@
-import React, {PureComponent} from "react";
+import React, {Component} from "react";
 import {withData} from "../DataProvider";
 import InstanceBox from "../Basic/InstanceBox";
 import "./InstanceClassContainer.css"
 import InstanceClassBarChart from "./InstanceClassBarChart";
 
-class InstanceClassContainer extends PureComponent {
+class InstanceClassContainer extends Component {
   set = false;
 
   render() {

@@ -5,7 +5,8 @@ import {withData} from "../DataProvider";
 class InstanceBox extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.instance !== nextProps.instance ||
-      this.props.classification !== nextProps.classification;
+      this.props.classification !== nextProps.classification ||
+      this.props.data.opacityMetric !== nextProps.data.opacityMetric;
   }
 
   refCallback = element => {
@@ -21,12 +22,12 @@ class InstanceBox extends Component {
   render() {
     //console.log("InstanceBox");
     const {instance, classification, style} = this.props;
-    const {getColor, getLabel, activateInstances, deactivateInstances} = this.props.data;
+    const {getColor, getLabel, activateInstances, deactivateInstances, opacityMetric} = this.props.data;
 
     if (!instance) return null;
     return <SimpleBox type={classification.type}
                       color={instance.active ? "gold" : getColor(instance.actual)}
-                      opacity={instance.active ? 1.0 : instance.score}
+                      opacity={instance.active ? 1.0 : (instance[opacityMetric] || 1.0)}
                       tooltipText={`${getLabel(instance.actual)} as ${getLabel(classification.predicted)}`}
                       style={style}
                       id={instance.id}
