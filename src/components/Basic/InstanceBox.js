@@ -1,12 +1,14 @@
 import React, {Component} from "react";
 import SimpleBox from "./SimpleBox";
 import {withData} from "../DataProvider";
+import {withFlowData} from "../InstanceFlow/FlowDataProvider";
 
 class InstanceBox extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.instance !== nextProps.instance ||
       this.props.classification !== nextProps.classification ||
-      this.props.data.opacityMetric !== nextProps.data.opacityMetric;
+      this.props.flowData.opacityMetric !== nextProps.flowData.opacityMetric ||
+      this.props.flowData.sortMetric !== nextProps.flowData.sortMetric;
   }
 
   refCallback = element => {
@@ -22,7 +24,8 @@ class InstanceBox extends Component {
   render() {
     //console.log("InstanceBox");
     const {instance, classification, style} = this.props;
-    const {getColor, getLabel, activateInstances, deactivateInstances, opacityMetric} = this.props.data;
+    const {getColor, getLabel, activateInstances, deactivateInstances} = this.props.data;
+    const {opacityMetric} = this.props.flowData;
 
     if (!instance) return null;
     return <SimpleBox type={classification.type}
@@ -51,4 +54,4 @@ class InstanceBox extends Component {
   }
 }
 
-export default withData(InstanceBox);
+export default withData(withFlowData(InstanceBox));

@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {withData} from "../../DataProvider";
 import SVGInstancePaths from "./SVGInstancePaths";
 import SVGSankeys from "./SVGSankeys";
+import {withFlowData} from "../FlowDataProvider";
 
 class FlowSVG extends Component {
   state = {
@@ -11,6 +12,7 @@ class FlowSVG extends Component {
   render() {
     const {instances, epochs} = this.props;
     const {boxElements, containerElements} = this.props.data;
+    const {sankeyEnabled} = this.props.flowData;
     const {svgElement} = this.state;
     let svgBounds;
     return <svg id="svg" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -20,7 +22,7 @@ class FlowSVG extends Component {
       {svgElement &&
       (svgBounds = svgElement.getBoundingClientRect()) &&
       [
-        <SVGSankeys key="svg-sankeys" epochs={epochs} svgBounds={svgBounds} containerElements={containerElements}/>,
+        sankeyEnabled && <SVGSankeys key="svg-sankeys" epochs={epochs} svgBounds={svgBounds} containerElements={containerElements}/>,
         instances.filter(instance => instance.active && instance.lines).map(instance =>
           <SVGInstancePaths key={instance.id} instance={instance} epochs={epochs} svgBounds={svgBounds}
                             boxElements={boxElements}/>
@@ -30,4 +32,4 @@ class FlowSVG extends Component {
   }
 }
 
-export default withData(FlowSVG);
+export default withData(withFlowData(FlowSVG));

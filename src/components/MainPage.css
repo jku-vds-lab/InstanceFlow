@@ -1,3 +1,7 @@
+h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+}
+
 .bar-chart-container {
     display: flex;
 }
@@ -24,4 +28,26 @@
 
 .bar-chart:hover {
     filter: brightness(110%);
+}
+
+input, select {
+    width: 100%;
+}
+
+input[type="checkbox"] {
+    width: auto;
+}
+
+.controls-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    justify-items: stretch;
+    padding: 0 10px;
+    align-items: center;
+    grid-gap:0 10px;
+}
+
+.controls-grid:nth-child(even) {
+    text-align: right;
 }

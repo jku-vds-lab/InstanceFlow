@@ -1,12 +1,10 @@
 import React from "react";
 import "./InstanceItem.css";
-import {DataProvider, withData} from "../DataProvider";
-import MainPage from "../MainPage";
-import ReactTooltip from "react-tooltip";
+import {withData} from "../DataProvider";
 
 const InstanceItem = (props) => {
   const {instance, epochs} = props;
-  const {getLabel, getColor, getIncludedOrOtherColor, activateInstances, deactivateInstances} = props.data;
+  const {getLabel, getColor, activateInstances, deactivateInstances} = props.data;
 
   const distributionPairs = epochs.reduce((acc, curr) => {
     const predicted = curr.classifications[instance.index].predicted;
@@ -53,7 +51,9 @@ const InstanceItem = (props) => {
              data-tip={`${pair[1]} ${getLabel(pair[0])}(s)`}
              className="bar-chart"
              style={{
-               flex: pair[1], "--box-color": getIncludedOrOtherColor(pair[0])
+               flex: pair[1],
+               //"--box-color": getIncludedOrOtherColor(pair[0])
+               "--box-color": getColor(pair[0])
              }}/>
       )}
     </div>

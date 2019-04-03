@@ -1,5 +1,4 @@
 import React, {PureComponent} from "react";
-import ReactTooltip from 'react-tooltip';
 import "./SimpleBox.css";
 
 class SimpleBox extends PureComponent {

@@ -19,7 +19,7 @@ class SVGSankeys extends Component {
     //console.log("SVGSankeys");
     const {epochs, svgBounds, containerElements} = this.props;
     if (!svgBounds) return null;
-    const {maxInstancesPerClass, getClassesWithOther, classes, getColor, getLabel} = this.props.data;
+    const {maxInstancesPerPrediction, getClassesWithOther, classes, getColor, getLabel} = this.props.data;
 
     const classesWithOther = getClassesWithOther();
     return epochs.slice(0, -1).map((epoch, epochIndex) => {
@@ -46,11 +46,11 @@ class SVGSankeys extends Component {
             const amount = toArr[fromClass];
             if (!classes.includes(fromClass)) return null;
             if (!amount) return null;
-            const sourceHeightPercentage = amount / maxInstancesPerClass;
+            const sourceHeightPercentage = amount / maxInstancesPerPrediction;
             const sourceHeight = sourceHeightPercentage * sourceBounds.height;
 
             //const targetHeightPercentage = howMany / nextEpoch.stats[targetCIndex].total;
-            const targetHeightPercentage = amount / maxInstancesPerClass;
+            const targetHeightPercentage = amount / maxInstancesPerPrediction;
             const targetHeight = targetHeightPercentage * targetBounds.height;
 
             const res = <SVGBasicSankey

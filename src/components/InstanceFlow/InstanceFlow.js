@@ -3,16 +3,15 @@ import {withData} from "../DataProvider";
 import "./InstanceFlow.css"
 import InstanceEpochContainer from "./InstanceEpochContainer";
 import InstanceFlowSVG from "./SVG/FlowSVG";
-import ReactTooltip from "react-tooltip";
+import {withFlowData} from "./FlowDataProvider";
 
 class InstanceFlow extends Component {
   render() {
     //console.log("InstanceFlow");
-    const {getClassesWithOther, loading} = this.props.data;
+    const {getClassesWithOther} = this.props.data;
     const {epochs, instances} = this.props;
-    const classesWithOther = getClassesWithOther();
 
-    if (loading) return null;
+    const classesWithOther = getClassesWithOther();
     return <div className="overflow-container">
       <div className="instance-flow-container" style={{
         gridTemplateColumns: `repeat(${epochs.length}, 1fr)`,
@@ -27,4 +26,4 @@ class InstanceFlow extends Component {
   }
 }
 
-export default withData(InstanceFlow);
+export default withData(withFlowData(InstanceFlow));

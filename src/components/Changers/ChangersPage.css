@@ -1,0 +1,25 @@
+.changers-bar {
+    flex-grow: 0;
+    width: 15px;
+}
+
+.changers-bar:hover {
+    filter: brightness(110%);
+}
+
+.changers-container {
+    display: flex;
+    justify-content: center;
+    height: 500px;
+    overflow-x: auto;
+}
+
+.changers-epoch {
+    display: flex;
+    flex-direction: column;
+}
+
+.changers-bar-separator {
+    background-color: white;
+    height: 5px;
+}

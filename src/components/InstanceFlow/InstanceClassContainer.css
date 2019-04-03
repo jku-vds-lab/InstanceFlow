@@ -1,13 +1,11 @@
 .instance-class-container {
+    border-top: 5px dashed;
     border-bottom: 5px dashed;
-    padding-bottom: 3px;
+    padding: 3px 0;
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
     min-height: 100px;
-    min-width: 50px;
+    min-width: 75px;
     width: 100%;
-    position: relative;
     z-index: 10;
 }
 

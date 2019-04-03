@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import './App.css';
 import MainPage from "./components/MainPage";
-import {DataProvider} from "./components/DataProvider";
+import {DataConsumer, DataProvider} from "./components/DataProvider";
+import {BrowserRouter as Router, Route} from "react-router-dom";
+import ChangersPage from "./components/Changers/ChangersPage";
 import ReactTooltip from "react-tooltip";
 
 class App extends Component {
@@ -9,8 +11,18 @@ class App extends Component {
     return (
       <div className="App">
         <DataProvider>
-          <MainPage />
+          <Router>
+            <DataConsumer>
+              {data =>
+                data.raw_data ? <div>
+                  <Route path="/" exact component={MainPage}/>
+                  <Route path="/changers/" exact component={ChangersPage}/>
+                </div> : <div>Loading Application</div>
+              }
+            </DataConsumer>
+          </Router>
         </DataProvider>
+        <ReactTooltip effect="solid"/>
       </div>
     );
   }

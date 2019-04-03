@@ -1,12 +1,12 @@
 import React from "react";
-import {withData} from "../DataProvider";
 import MetricSelector from "./MetricSelector";
+import {withFlowData} from "../InstanceFlow/FlowDataProvider";
 
 const OpacityMetric = (props) => {
-  const {opacityMetric, setOpacityMetric} = props.data;
+  const {opacityMetric, setOpacityMetric} = props.flowData;
   return <MetricSelector selectedMetric={opacityMetric} onChange={metric => {
     setOpacityMetric(metric);
   }}/>;
 };
 
-export default withData(OpacityMetric);
+export default withFlowData(OpacityMetric);

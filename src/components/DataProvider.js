@@ -12,12 +12,12 @@ const DataProvider = (props) => {
   const [activeInstances, setActiveInstances] = useState(new Set());
   const [boxElements, setBoxElements] = useState(new Map());
   const [containerElements, setContainerElements] = useState(new Map());
-  const [classes, setClasses] = useState([0]);
+  const [classes, setClasses] = useState([3, 5]);
   const [from, setFrom] = useState(20);
-  const [to, setTo] = useState(22);
+  const [to, setTo] = useState(25);
   const [loading, setLoading] = useState(true);
-  const [maxInstancesPerPredictedClass, setMaxInstancesPerPredictedClass] = useState(0);
-  const [maxInstancesPerClass, setMaxInstancesPerClass] = useState(0);
+  const [maxInstancesPerPredictionPerClass, setMaxInstancesPerPredictionPerClass] = useState(0);
+  const [maxInstancesPerPrediction, setMaxInstancesPerPrediction] = useState(0);
   const [colors, setColors] = useState(["#ff0029", "#377eb8", "#66a61e", "#984ea3", "#00d2d5", "#ff7f00", "#af8d00", "#7f80cd", "#b3e900", "#c42e60", "lightgray"]);
 
   useEffect(() => {
@@ -39,13 +39,13 @@ const DataProvider = (props) => {
     setLoading(false);
   }, [data, from, to, classes]);
 
-  useEffect(() => {
-    setInstances(instances => sortInstances(instances));
-  }, [sortMetric]);
+  //useEffect(() => {
+  //  setInstances(instances => sortInstances(instances));
+  //}, [sortMetric]);
 
   const sortInstances = (instances) => {
     return instances.sort((i1, i2) => {
-      return i1.actual - i2.actual || i1[sortMetric] - i2[sortMetric] || i1.score - i2.score || 0;
+      return i1.actual - i2.actual || 0;
     });
   };
 
@@ -148,7 +148,7 @@ const DataProvider = (props) => {
       instance.classesVisited = classesVisited;
       instance.score = Math.round(wrong / total * 100) / 100;
       instance.variability = Math.round(jumps / total * 100) / 100;
-      instance.classesVisitedNum = Math.round(classesVisited.size / data.labels.length * 100) / 100;
+      instance.classesVisitedNum = Math.round((classesVisited.size - 1) / data.labels.length * 100) / 100;
       instance.display = wrong > 0 && classes.includes(instance.actual);
     });
   };
@@ -177,8 +177,8 @@ const DataProvider = (props) => {
   };
 
   const annotateEpochMeta = (epochData) => {
-    let maxInstancesPerClassPredictionTemp = maxInstancesPerPredictedClass;
-    let maxInstancesPerClassTemp = maxInstancesPerClass;
+    let maxInstancesPerPredictionPerClassTemp = 0;
+    let maxInstancesPerPredictionTemp = 0;
     epochData.forEach((epoch, eIndex) => {
       epoch.classifications.forEach((classification, cIndex) => {
         let nextClassification;
@@ -193,15 +193,15 @@ const DataProvider = (props) => {
         if (instance.display) {
           const instanceStats = epoch.stats[getIncludedOrOtherIndex(classification.predicted)];
           instanceStats.total = (instanceStats.total || 0) + 1;
-          if (maxInstancesPerClassTemp < instanceStats.total) {
-            maxInstancesPerClassTemp = instanceStats.total;
+          if (classes.includes(instance.actual) && maxInstancesPerPredictionTemp < instanceStats.total) {
+            maxInstancesPerPredictionTemp = instanceStats.total;
           }
 
 
           instanceStats.predicted[getIncludedOrOtherIndex(instance.actual)] =
             (instanceStats.predicted[getIncludedOrOtherIndex(instance.actual)] || 0) + 1;
-          if (maxInstancesPerClassPredictionTemp < instanceStats.predicted[getIncludedOrOtherIndex(instance.actual)]) {
-            maxInstancesPerClassPredictionTemp = instanceStats.predicted[getIncludedOrOtherIndex(instance.actual)];
+          if (classes.includes(instance.actual) && maxInstancesPerPredictionPerClassTemp < instanceStats.predicted[getIncludedOrOtherIndex(instance.actual)]) {
+            maxInstancesPerPredictionPerClassTemp = instanceStats.predicted[getIncludedOrOtherIndex(instance.actual)];
           }
 
 
@@ -223,8 +223,8 @@ const DataProvider = (props) => {
         }
       });
     });
-    setMaxInstancesPerPredictedClass(maxInstancesPerClassPredictionTemp);
-    setMaxInstancesPerClass(maxInstancesPerClassTemp);
+    setMaxInstancesPerPredictionPerClass(maxInstancesPerPredictionPerClassTemp);
+    setMaxInstancesPerPrediction(maxInstancesPerPredictionTemp);
   };
 
   const getIncludedOrOtherIndex = (index) => {
@@ -236,6 +236,7 @@ const DataProvider = (props) => {
   };
 
   const getClassesWithOther = () => {
+    if(classes.length === data.labels.length) return classes;
     const newClasses = [...classes];
     newClasses.splice(parseInt(classes.length / 2), 0, 10);
     return newClasses;
@@ -255,6 +256,7 @@ const DataProvider = (props) => {
 
   return (
     <DataContext.Provider value={{
+      raw_data: data,
       to, setTo,
       from, setFrom,
       classes, setClasses,
@@ -266,15 +268,6 @@ const DataProvider = (props) => {
         setInstances(instances => instances.map(i => i.id === instance.id ? {
           ...i,
           ...props
-        } : i));
-      },
-      updateInstanceClientRect: (instance, props) => {
-        setInstances(instances => instances.map(i => i.id === instance.id ? {
-          ...i,
-          rect: {
-            ...i.rect,
-            ...props
-          }
         } : i));
       },
       activateInstances: (config = {}, ...instanceIds) => {
@@ -336,8 +329,8 @@ const DataProvider = (props) => {
           return res;
         });
       },
-      maxInstancesPerPredictedClass,
-      maxInstancesPerClass,
+      maxInstancesPerPredictionPerClass,
+      maxInstancesPerPrediction,
       loading,
       colors, setColors,
       sortMetric, setSortMetric,
