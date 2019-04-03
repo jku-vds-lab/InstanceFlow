@@ -5,7 +5,11 @@
     display: flex;
     min-height: 100px;
     min-width: 75px;
+    box-sizing: border-box;
     width: 100%;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: stretch;
     z-index: 10;
 }
 
