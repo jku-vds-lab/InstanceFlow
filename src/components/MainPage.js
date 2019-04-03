@@ -1,16 +1,11 @@
 import React, {Component} from "react";
 import InstanceList from "./InstanceList/InstanceList";
-import EpochSelector from "./Controls/EpochSelector";
 import {withData} from "./DataProvider";
 import "./MainPage.css";
-import ClassSelector from "./Controls/ClassSelector";
 import Legend from "./Controls/Legend";
 import InstanceFlow from "./InstanceFlow/InstanceFlow";
-import SortSelector from "./Controls/SortSelector";
-import OpacitySelector from "./Controls/OpacitySelector";
 import {FlowDataProvider} from "./InstanceFlow/FlowDataProvider";
-import ClassViewSelector from "./Controls/ClassViewSelector";
-import SankeyEnableCheckbox from "./Controls/SankeyEnableCheckbox";
+import AllControls from "./Controls/AllControls";
 
 class MainPage extends Component {
   render() {
@@ -21,20 +16,14 @@ class MainPage extends Component {
       <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between"}}>
         <div>
           <h4>Controls</h4>
-          <div className="controls-grid">
-            <span>Epochs:</span>
-            <EpochSelector stlye={{gridRowStart: 1, gridRowEnd: 2}}/>
-            <span>Sorting:</span>
-            <SortSelector/>
-            <span>Opacity:</span>
-            <OpacitySelector/>
-            <span>Classes:</span>
-            <ClassSelector/>
-            <span>Class View:</span>
-            <ClassViewSelector/>
-            <span/>
-            <SankeyEnableCheckbox/>
-          </div>
+          <AllControls showEpochSelector={true}
+                       showSortingSelector={true}
+                       showOpacitySelector={true}
+                       showClassSelector={true}
+                       showClassViewSelector={true}
+                       showInstanceFilterSelector={true}
+                       showSankeyEnableCheckbox={true}
+          />
         </div>
         <div style={{flex: 3}}>
           <h4>About</h4>

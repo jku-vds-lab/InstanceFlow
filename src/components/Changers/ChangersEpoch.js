@@ -31,7 +31,7 @@ class ChangersEpoch extends Component {
       <ChangersBar
         description={`Instances moving from ${getLabel(classes[0])} to ${getLabel(classes[1])}`}
         height={(epoch.stats[classes[0]].to[classes[1]] || {}).total}
-        color={getColor(classes[1])}/>
+        color={getColor(classes[0])}/>
       <ChangersBarSeparator/>
       <ChangersBar
         description={`Instances moving from ${getLabel(classes[1])} to ${getLabel(classes[0])}`}
@@ -49,7 +49,7 @@ class ChangersEpoch extends Component {
       <ChangersBar
         description={`Instances moving from ${getLabel(classes[2])} to ${getLabel(classes[1])}`}
         height={(epoch.stats[classes[2]].to[classes[1]] || {}).total}
-        color={getColor(classes[1])}/>
+        color={getColor(classes[2])}/>
       <ChangersBar
         description={`Instances staying in ${getLabel(classes[2])}`}
         height={epoch.stats[classes[2]].in.total + epoch.stats[classes[2]].stable.total}

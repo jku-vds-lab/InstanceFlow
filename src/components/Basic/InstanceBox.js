@@ -13,12 +13,12 @@ class InstanceBox extends Component {
 
   refCallback = element => {
     if (element) {
-      this.props.data.updateBoxElements(this.props.instance.id, this.props.epoch.id, element);
+      this.props.flowData.updateBoxElements(this.props.instance.id, this.props.epoch.id, element);
     }
   };
 
   componentWillUnmount() {
-    this.props.data.updateBoxElements(this.props.instance.id, this.props.epoch.id, null);
+    this.props.flowData.updateBoxElements(this.props.instance.id, this.props.epoch.id, null);
   }
 
   render() {

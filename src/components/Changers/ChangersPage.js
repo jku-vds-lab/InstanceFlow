@@ -1,10 +1,9 @@
 import React, {Component} from "react";
-import EpochSelector from "../Controls/EpochSelector";
 import {withData} from "../DataProvider";
 import "./ChangersPage.css";
-import ClassSelector from "../Controls/ClassSelector";
 import Legend from "../Controls/Legend";
 import ChangersContainer from "../Changers/ChangersContainer";
+import AllControls from "../Controls/AllControls";
 
 class ChangersPage extends Component {
   render() {
@@ -15,12 +14,10 @@ class ChangersPage extends Component {
       <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between"}}>
         <div>
           <h4>Controls</h4>
-          <div className="controls-grid">
-            <span>Epochs:</span>
-            <EpochSelector style={{gridRowStart: 1, gridRowEnd: 2}}/>
-            <span>Classes:</span>
-            <ClassSelector/>
-          </div>
+          <AllControls showEpochSelector={true}
+                       showClassSelector={true}
+                       showInstanceFilterSelector={true}
+          />
         </div>
         <div style={{flex: 3}}>
           <h4>About</h4>

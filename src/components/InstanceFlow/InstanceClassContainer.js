@@ -10,8 +10,8 @@ class InstanceClassContainer extends Component {
 
   render() {
     const {instances, clazz, order, epoch} = this.props;
-    const {updateContainerElements, classes: classesWithoutOther} = this.props.data;
-    const {classView} = this.props.flowData;
+    const {classes: classesWithoutOther} = this.props.data;
+    const {classView, updateContainerElements} = this.props.flowData;
     if (!epoch.stats[clazz]) return null;
     const {getColor} = this.props.data;
     return <div className="instance-class-container"

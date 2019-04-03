@@ -9,9 +9,8 @@ const DataProvider = (props) => {
   const [data, setData] = useState(null);
   const [epochs, setEpochs] = useState([]);
   const [instances, setInstances] = useState([]);
+  const [instanceFilter, setInstanceFilter] = useState("incorrect");
   const [activeInstances, setActiveInstances] = useState(new Set());
-  const [boxElements, setBoxElements] = useState(new Map());
-  const [containerElements, setContainerElements] = useState(new Map());
   const [classes, setClasses] = useState([3, 5]);
   const [from, setFrom] = useState(20);
   const [to, setTo] = useState(25);
@@ -37,7 +36,7 @@ const DataProvider = (props) => {
         .filter(instance => instance.display)));
     }
     setLoading(false);
-  }, [data, from, to, classes]);
+  }, [data, from, to, classes, instanceFilter]);
 
   //useEffect(() => {
   //  setInstances(instances => sortInstances(instances));
@@ -149,7 +148,13 @@ const DataProvider = (props) => {
       instance.score = Math.round(wrong / total * 100) / 100;
       instance.variability = Math.round(jumps / total * 100) / 100;
       instance.classesVisitedNum = Math.round((classesVisited.size - 1) / data.labels.length * 100) / 100;
-      instance.display = wrong > 0 && classes.includes(instance.actual);
+      if(instanceFilter === "incorrect") {
+        instance.display = wrong > 0 && classes.includes(instance.actual);
+      } else if(instanceFilter === "active") {
+        instance.display = instance.active && classes.includes(instance.actual);
+      } else if(instanceFilter === "all") {
+        instance.display = classes.includes(instance.actual);
+      }
     });
   };
 
@@ -303,38 +308,13 @@ const DataProvider = (props) => {
           return res;
         });
       },
-      boxElements, setBoxElements, updateBoxElements: (instanceId, epochId, boxElement) => {
-        setBoxElements(boxElements => {
-          const res = new Map(boxElements);
-          const curr = res.get(instanceId) || new Map();
-          if (!boxElement) {
-            curr.delete(epochId);
-          } else {
-            curr.set(epochId, boxElement);
-          }
-          res.set(instanceId, curr);
-          return res;
-        });
-      },
-      containerElements, setContainerElements, updateContainerElements: (clazz, epochId, containerElement) => {
-        setContainerElements(containerElements => {
-          const res = new Map(containerElements);
-          const curr = res.get(clazz) || new Map();
-          if (!containerElement) {
-            curr.delete(epochId);
-          } else {
-            curr.set(epochId, containerElement);
-          }
-          res.set(clazz, curr);
-          return res;
-        });
-      },
       maxInstancesPerPredictionPerClass,
       maxInstancesPerPrediction,
       loading,
       colors, setColors,
       sortMetric, setSortMetric,
       opacityMetric, setOpacityMetric,
+      instanceFilter, setInstanceFilter,
       getLabel,
       getColor,
       getIncludedOrOtherColor,

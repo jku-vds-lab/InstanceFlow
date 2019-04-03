@@ -11,8 +11,7 @@ class FlowSVG extends Component {
 
   render() {
     const {instances, epochs} = this.props;
-    const {boxElements, containerElements} = this.props.data;
-    const {sankeyEnabled} = this.props.flowData;
+    const {sankeyEnabled, boxElements, containerElements} = this.props.flowData;
     const {svgElement} = this.state;
     let svgBounds;
     return <svg id="svg" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
