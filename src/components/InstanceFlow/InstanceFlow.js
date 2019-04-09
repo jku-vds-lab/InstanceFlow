@@ -7,9 +7,10 @@ import {withFlowData} from "./FlowDataProvider";
 
 class InstanceFlow extends Component {
   render() {
-    //console.log("InstanceFlow");
     const {getClassesWithOther} = this.props.data;
-    const {epochs, instances} = this.props;
+    const {epochs, instances : allInstances} = this.props;
+
+    const instances = allInstances.filter(instance => instance.displayInFlow);
 
     const classesWithOther = getClassesWithOther();
     return <div className="overflow-container">

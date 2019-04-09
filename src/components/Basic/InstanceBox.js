@@ -6,6 +6,7 @@ import {withFlowData} from "../InstanceFlow/FlowDataProvider";
 class InstanceBox extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.instance !== nextProps.instance ||
+      this.props.instance.active !== nextProps.instance.active ||
       this.props.classification !== nextProps.classification ||
       this.props.flowData.opacityMetric !== nextProps.flowData.opacityMetric ||
       this.props.flowData.sortMetric !== nextProps.flowData.sortMetric;
@@ -22,7 +23,6 @@ class InstanceBox extends Component {
   }
 
   render() {
-    //console.log("InstanceBox");
     const {instance, classification, style} = this.props;
     const {getColor, getLabel, activateInstances, deactivateInstances} = this.props.data;
     const {opacityMetric} = this.props.flowData;
@@ -37,17 +37,17 @@ class InstanceBox extends Component {
                       refCallback={this.refCallback}
                       onMouseOver={e => {
                         if (!instance.clicked)
-                          activateInstances({lines: true}, instance.id)
+                          activateInstances({lines: true}, instance)
                       }}
                       onMouseOut={e => {
                         if (!instance.clicked)
-                          deactivateInstances(false, instance.id);
+                          deactivateInstances(false, instance);
                       }}
                       onClick={e => {
                         if (!instance.clicked) {
-                          activateInstances({clicked: true, lines: true}, instance.id);
+                          activateInstances({clicked: true, lines: true}, instance);
                         } else {
-                          activateInstances({clicked: false, lines: false}, instance.id);
+                          activateInstances({clicked: false, lines: false}, instance);
                         }
                       }}
     />;

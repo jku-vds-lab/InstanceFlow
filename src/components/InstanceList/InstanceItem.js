@@ -26,17 +26,17 @@ const InstanceItem = (props) => {
            alt={`Instance ${instance.id}`}
            onMouseOver={e => {
              if (!instance.clicked)
-               activateInstances({lines: true}, instance.id)
+               activateInstances({lines: true}, instance)
            }}
            onMouseOut={e => {
              if (!instance.clicked)
-               deactivateInstances(false, instance.id);
+               deactivateInstances(false, instance);
            }}
            onClick={e => {
              if (!instance.clicked) {
-               activateInstances({clicked: true, lines: true}, instance.id);
+               activateInstances({clicked: true, lines: true}, instance);
              } else {
-               activateInstances({clicked: false, lines: false}, instance.id);
+               activateInstances({clicked: false, lines: false}, instance);
              }
            }}/>
     </div>

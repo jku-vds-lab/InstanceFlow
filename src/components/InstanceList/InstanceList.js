@@ -17,7 +17,7 @@ class InstanceList extends Component {
         <b>Variability</b>
         <b>Score</b>
       </div>
-      {instances.concat().sort((i1, i2) => i2.clicked - i1.clicked || i2[sortMetric] - i1[sortMetric] || 0).map(instance =>
+      {instances.filter(instance => instance.displayInList).concat().sort((i1, i2) => i2.clicked - i1.clicked || i2[sortMetric] - i1[sortMetric] || 0).map(instance =>
         <InstanceItem key={instance.id} instance={instance} epochs={epochs}/>
       )}
     </div>;

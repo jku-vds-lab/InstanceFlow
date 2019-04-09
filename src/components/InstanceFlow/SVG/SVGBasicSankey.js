@@ -6,12 +6,12 @@ class SVGBasicSankey extends Component {
     clicked: false
   };
 
-  getInstanceIdsFromSankey(sourceClass, targetClass, fromClass, epoch, nextEpoch) {
+  getInstancesFromSankey(sourceClass, targetClass, fromClass, epoch, nextEpoch) {
     return this.props.data.instances
       .filter(instance => instance.actual === fromClass)
+      .filter(instance => instance.displayInFlow)
       .filter(instance => this.props.data.getIncludedOrOtherIndex(epoch.classifications[instance.index].predicted) === sourceClass)
-      .filter(instance => this.props.data.getIncludedOrOtherIndex(nextEpoch.classifications[instance.index].predicted) === targetClass)
-      .map(instance => instance.id);
+      .filter(instance => this.props.data.getIncludedOrOtherIndex(nextEpoch.classifications[instance.index].predicted) === targetClass);
   }
 
   render() {
@@ -25,7 +25,7 @@ class SVGBasicSankey extends Component {
     const endY = -svgBounds.y + this.props.endY;
     const halfDistanceX = Math.abs((endX - startX) / 2);
 
-    const instanceIds = this.getInstanceIdsFromSankey(sourceClass, targetClass, fromClass, epoch, nextEpoch);
+    const instances = this.getInstancesFromSankey(sourceClass, targetClass, fromClass, epoch, nextEpoch);
 
     return <path
       data-tip={text}
@@ -40,18 +40,18 @@ class SVGBasicSankey extends Component {
       fill={color}
       stroke="none"
       onMouseOver={e => {
-        activateInstances(undefined, ...instanceIds)
+        activateInstances(undefined, ...instances)
       }}
       onMouseOut={e => {
-        deactivateInstances(false, ...instanceIds);
+        deactivateInstances(false, ...instances);
       }}
       onClick={e => {
         if (!clicked) {
           this.setState({clicked: true});
-          activateInstances({clicked: true, lines: true}, ...instanceIds);
+          activateInstances({clicked: true, lines: true}, ...instances);
         } else {
           this.setState({clicked: false});
-          activateInstances({clicked: false, lines: false}, ...instanceIds);
+          deactivateInstances(true, ...instances);
         }
       }}
     />

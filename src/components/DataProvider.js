@@ -11,6 +11,8 @@ const DataProvider = (props) => {
   const [instances, setInstances] = useState([]);
   const [instanceFilter, setInstanceFilter] = useState("incorrect");
   const [activeInstances, setActiveInstances] = useState(new Set());
+  const [lineInstances, setLineInstances] = useState(new Set());
+  const [clickedInstances, setClickedInstances] = useState(new Set());
   const [classes, setClasses] = useState([3, 5]);
   const [from, setFrom] = useState(20);
   const [to, setTo] = useState(25);
@@ -27,20 +29,26 @@ const DataProvider = (props) => {
     setLoading(true);
     if (data) {
       setEpochs(prepareEpochs());
-      // setting new instances
-      setInstances(sortInstances(data.instances
-        .map((instance, index) => {
-          instance.index = index;
-          return instance;
-        })
-        .filter(instance => instance.display)));
+      setInstances(
+        sortInstances(
+          data.instances
+            .map((instance, index) => {
+              instance.index = index;
+              return instance;
+            })
+            .filter(instance => instance.display)));
     }
     setLoading(false);
-  }, [data, from, to, classes, instanceFilter]);
+  }, [data, from, to, classes, instanceFilter, clickedInstances]);
 
-  //useEffect(() => {
-  //  setInstances(instances => sortInstances(instances));
-  //}, [sortMetric]);
+  useEffect(() => {
+    setInstances(instances => instances.map(instance => ({
+      ...instance,
+      active: activeInstances.has(instance.id),
+      lines: lineInstances.has(instance.id),
+      clicked: clickedInstances.has(instance.id)
+    })));
+  }, [activeInstances]);
 
   const sortInstances = (instances) => {
     return instances.sort((i1, i2) => {
@@ -121,8 +129,8 @@ const DataProvider = (props) => {
       instance.score = 0;
       instance.display = false;
       instance.active = activeInstances.has(instance.id);
-      instance.clicked = activeInstances.has(instance.id);
-      instance.lines = activeInstances.has(instance.id);
+      instance.lines = lineInstances.has(instance.id);
+      instance.clicked = clickedInstances.has(instance.id);
     });
   };
 
@@ -148,13 +156,18 @@ const DataProvider = (props) => {
       instance.score = Math.round(wrong / total * 100) / 100;
       instance.variability = Math.round(jumps / total * 100) / 100;
       instance.classesVisitedNum = Math.round((classesVisited.size - 1) / data.labels.length * 100) / 100;
-      if(instanceFilter === "incorrect") {
-        instance.display = wrong > 0 && classes.includes(instance.actual);
-      } else if(instanceFilter === "active") {
-        instance.display = instance.active && classes.includes(instance.actual);
-      } else if(instanceFilter === "all") {
-        instance.display = classes.includes(instance.actual);
+      if (instanceFilter === "incorrect") {
+        instance.displayInFlow = wrong > 0 && classes.includes(instance.actual);
+        instance.displayInList = instance.displayInFlow;
+      } else if (instanceFilter === "active") {
+        instance.displayInFlow = instance.clicked && classes.includes(instance.actual);
+        instance.displayInList = wrong > 0 && classes.includes(instance.actual);
+      } else if (instanceFilter === "all") {
+        instance.displayInFlow = classes.includes(instance.actual);
+        instance.displayInList = classes.includes(instance.actual);
       }
+      instance.display = instance.displayInFlow || instance.displayInList;
+      instance.displayInStats = instance.displayInFlow;
     });
   };
 
@@ -195,7 +208,7 @@ const DataProvider = (props) => {
 
         const instance = data.instances[cIndex];
 
-        if (instance.display) {
+        if (instance.displayInStats) {
           const instanceStats = epoch.stats[getIncludedOrOtherIndex(classification.predicted)];
           instanceStats.total = (instanceStats.total || 0) + 1;
           if (classes.includes(instance.actual) && maxInstancesPerPredictionTemp < instanceStats.total) {
@@ -241,7 +254,7 @@ const DataProvider = (props) => {
   };
 
   const getClassesWithOther = () => {
-    if(classes.length === data.labels.length) return classes;
+    if (classes.length === data.labels.length) return classes;
     const newClasses = [...classes];
     newClasses.splice(parseInt(classes.length / 2), 0, 10);
     return newClasses;
@@ -269,44 +282,54 @@ const DataProvider = (props) => {
       labels: data ? data.labels : [],
       labelsWithOther: data ? [...data.labels, "Other"] : [],
       epochs, setEpochs,
-      instances, setInstances, updateInstance: (instance, props) => {
+      instances, setInstances,
+      updateInstance: (instance, props) => {
         setInstances(instances => instances.map(i => i.id === instance.id ? {
           ...i,
           ...props
         } : i));
       },
-      activateInstances: (config = {}, ...instanceIds) => {
+      activateInstances: (config = {}, ...instances) => {
         setActiveInstances(activeInstances => {
           const res = new Set(activeInstances);
-          instanceIds.forEach(id => res.add(id));
+          instances.forEach(instance => res.add(instance.id));
           return res;
         });
-        setInstances(instances => sortInstances(instances.map(instance => instanceIds.includes(instance.id) ? {
-          ...instance,
-          active: true,
-          clicked: config.clicked === "invert" ? !instance.clicked : config.clicked === undefined ? instance.clicked : config.clicked,
-          lines: config.lines === "invert" ? !instance.lines : config.lines === undefined ? instance.lines : config.lines
-        } : instance)));
+        if (config.lines !== undefined)
+          setLineInstances(lineInstances => {
+            const res = new Set(lineInstances);
+            instances.forEach(instance => config.lines ? res.add(instance.id) : res.delete(instance.id));
+            return res;
+          });
+        if (config.clicked !== undefined)
+          setClickedInstances(clickedInstances => {
+            const res = new Set(clickedInstances);
+            instances.forEach(instance => config.clicked ? res.add(instance.id) : res.delete(instance.id));
+            return res;
+          });
         //setInstances(sortInstances(instances));
       },
-      deactivateInstances: (force = false, ...instanceIds) => {
+      deactivateInstances: (force = false, ...instances) => {
+        const nonClickedInstances =  instances
+          .filter(instance => !instance.clicked || force);
         setActiveInstances(activeInstances => {
           const res = new Set(activeInstances);
-          //instanceIds.forEach(id => res.delete(id));
-          setInstances(instances => sortInstances(instances.map(instance => {
-            if (instanceIds.includes(instance.id) && (!instance.clicked || force)) {
-              res.delete(instance.id);
-              return {
-                ...instance,
-                active: false,
-                clicked: false,
-                lines: false
-              }
-            }
-            return instance;
-          })));
+          nonClickedInstances
+            .forEach(instance => res.delete(instance.id));
           return res;
         });
+        setLineInstances(lineInstances => {
+          const res = new Set(lineInstances);
+          nonClickedInstances
+            .forEach(instance => res.delete(instance.id));
+          return res;
+        });
+        setClickedInstances(clickedInstances => {
+          const res = new Set(clickedInstances);
+          nonClickedInstances
+            .forEach(instance => res.delete(instance.id));
+          return res;
+        })
       },
       maxInstancesPerPredictionPerClass,
       maxInstancesPerPrediction,
