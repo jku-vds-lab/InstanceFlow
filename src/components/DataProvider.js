@@ -22,11 +22,12 @@ const DataProvider = (props) => {
   const [colors, setColors] = useState(["#ff0029", "#377eb8", "#66a61e", "#984ea3", "#00d2d5", "#ff7f00", "#af8d00", "#7f80cd", "#b3e900", "#c42e60", "lightgray"]);
 
   useEffect(() => {
-    setData(initializeData(datasets.CIFAR10));
+    initializeData(datasets.CIFAR10);
   }, []);
 
   useEffect(() => {
     setLoading(true);
+    console.log(data);
     if (data) {
       setEpochs(prepareEpochs());
       setInstances(
@@ -57,7 +58,7 @@ const DataProvider = (props) => {
   };
 
   const initializeData = (data) => {
-    return annotateInstanceData(data);
+    setData(annotateInstanceData(data));
   };
 
   const annotateInstanceData = (data) => {
@@ -275,6 +276,7 @@ const DataProvider = (props) => {
   return (
     <DataContext.Provider value={{
       raw_data: data,
+      initializeData,
       to, setTo,
       from, setFrom,
       classes, setClasses,

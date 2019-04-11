@@ -16,7 +16,8 @@ class MainPage extends Component {
       <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between"}}>
         <div>
           <h4>Controls</h4>
-          <AllControls showEpochSelector={true}
+          <AllControls showDataUploadInput={true}
+                       showEpochSelector={true}
                        showSortingSelector={true}
                        showOpacitySelector={true}
                        showClassSelector={true}

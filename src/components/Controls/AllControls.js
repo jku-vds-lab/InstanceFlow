@@ -7,6 +7,7 @@ import ClassViewSelector from "./ClassViewSelector";
 import InstanceFilterSelector from "./InstanceFilterSelector";
 import SankeyEnableCheckbox from "./SankeyEnableCheckbox";
 import "./AllControls.css";
+import DataUploadInput from "./DataUploadInput";
 
 const AllControls = (props) => {
   const {
@@ -16,9 +17,12 @@ const AllControls = (props) => {
     showClassSelector,
     showClassViewSelector,
     showInstanceFilterSelector,
-    showSankeyEnableCheckbox
+    showSankeyEnableCheckbox,
+    showDataUploadInput,
   } = props;
   return <div className="controls-grid">
+    {showDataUploadInput && <span>Upload file:</span>}
+    {showDataUploadInput && <DataUploadInput/>}
     {showEpochSelector && <span>Epochs:</span>}
     {showEpochSelector && <EpochSelector stlye={{gridRowStart: 1, gridRowEnd: 2}}/>}
     {showSortingSelector && <span>Sorting:</span>}
@@ -34,7 +38,17 @@ const AllControls = (props) => {
     {showSankeyEnableCheckbox && <span/>}
     {showSankeyEnableCheckbox && <SankeyEnableCheckbox/>}
   </div>;
+};
 
+AllControls.defaultProps = {
+  showEpochSelector: true,
+  showClassSelector: true,
+  showDataUploadInput: true,
+  showSortingSelector: false,
+  showOpacitySelector: false,
+  showClassViewSelector: false,
+  showInstanceFilterSelector: false,
+  showSankeyEnableCheckbox: false,
 };
 
 export default AllControls;
