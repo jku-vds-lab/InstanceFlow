@@ -27,7 +27,6 @@ const DataProvider = (props) => {
 
   useEffect(() => {
     setLoading(true);
-    console.log(data);
     if (data) {
       setEpochs(prepareEpochs());
       setInstances(

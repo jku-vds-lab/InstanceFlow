@@ -1,0 +1,121 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://bsc.pueh.xyz/data/data.schema.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "labels",
+    "instances",
+    "epochs"
+  ],
+  "properties": {
+    "labels": {
+      "$id": "#/properties/labels",
+      "type": "array",
+      "title": "The Labels Schema",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": {
+        "$id": "#/properties/labels/items",
+        "type": "string",
+        "title": "The Items Schema",
+        "default": "",
+        "examples": [
+          "Cat",
+          "Dog"
+        ],
+        "pattern": "^(.*)$"
+      }
+    },
+    "instances": {
+      "$id": "#/properties/instances",
+      "type": "array",
+      "title": "The Instances Schema",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$id": "#/properties/instances/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "id",
+          "actual",
+          "image"
+        ],
+        "properties": {
+          "id": {
+            "$id": "#/properties/instances/items/properties/id",
+            "type": "string",
+            "title": "The Id Schema",
+            "default": "",
+            "examples": [
+              "0000",
+              "0001"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "actual": {
+            "$id": "#/properties/instances/items/properties/actual",
+            "type": "integer",
+            "title": "The Actual Schema",
+            "examples": [
+              0,
+              1
+            ]
+          },
+          "image": {
+            "$id": "#/properties/instances/items/properties/image",
+            "type": "string",
+            "title": "The Image Schema",
+            "default": "",
+            "examples": [
+              "images/0000.png"
+            ],
+            "pattern": "^(.*)$"
+          }
+        }
+      }
+    },
+    "epochs": {
+      "$id": "#/properties/epochs",
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
+      "title": "The Epochs Schema",
+      "items": {
+        "$id": "#/properties/epochs/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "id",
+          "classifications"
+        ],
+        "properties": {
+          "id": {
+            "$id": "#/properties/epochs/items/properties/id",
+            "type": "string",
+            "title": "The Id Schema",
+            "default": "",
+            "examples": [
+              "0",
+              "1"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "classifications": {
+            "$id": "#/properties/epochs/items/properties/classifications",
+            "type": "array",
+            "title": "The Classifications Schema",
+            "items": {
+              "$id": "#/properties/epochs/items/properties/classifications/items",
+              "type": "integer",
+              "title": "The Items Schema",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}
