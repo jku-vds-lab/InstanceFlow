@@ -2,13 +2,15 @@ import React from "react";
 import Slider, {Range} from "rc-slider";
 import {withData} from "../DataProvider";
 import 'rc-slider/assets/index.css';
+import FormControl from "@material-ui/core/FormControl/FormControl";
+import FormLabel from "@material-ui/core/FormLabel/FormLabel";
+import FormHelperText from "@material-ui/core/FormHelperText/FormHelperText";
 
 const RangeWithTooltip = Slider.createSliderWithTooltip(Range);
 const EpochSelector = (props) => {
   const {to, setTo, from, setFrom, raw_data} = props.data;
-  return <div>
-    {/*<input type="number" value={from} onChange={e => setFrom(parseInt(e.target.value))}/><br/>
-    <input type="number" value={to} onChange={e => setTo(parseInt(e.target.value))}/>*/}
+  return <FormControl fullWidth component="fieldset">
+    <FormLabel component="legend">Epoch Selector</FormLabel>
     <RangeWithTooltip min={0}
                       max={raw_data.epochs.length - 1}
                       defaultValue={[from, to]}
@@ -26,7 +28,8 @@ const EpochSelector = (props) => {
                         backgroundColor: 'lightgray',
                       }}
     />
-  </div>;
+    <FormHelperText>Displaying {from}. to {to}. Epoch</FormHelperText>
+  </FormControl>;
 
 };
 

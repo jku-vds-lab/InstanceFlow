@@ -7,7 +7,9 @@ import ClassViewSelector from "./ClassViewSelector";
 import InstanceFilterSelector from "./InstanceFilterSelector";
 import SankeyEnableCheckbox from "./SankeyEnableCheckbox";
 import "./AllControls.css";
-import DataUploadInput from "./DataUploadInput";
+import Grid from "@material-ui/core/Grid/Grid";
+import FormLabel from "@material-ui/core/FormLabel/FormLabel";
+import FormControl from "@material-ui/core/FormControl/FormControl";
 
 const AllControls = (props) => {
   const {
@@ -18,25 +20,21 @@ const AllControls = (props) => {
     showClassViewSelector,
     showInstanceFilterSelector,
     showSankeyEnableCheckbox,
-    showDataUploadInput,
+    style
   } = props;
-  return <div className="controls-grid">
-    {showDataUploadInput && <span>Upload file:</span>}
-    {showDataUploadInput && <DataUploadInput/>}
-    {showEpochSelector && <span>Epochs:</span>}
-    {showEpochSelector && <EpochSelector stlye={{gridRowStart: 1, gridRowEnd: 2}}/>}
-    {showSortingSelector && <span>Sorting:</span>}
-    {showSortingSelector && <SortSelector/>}
-    {showOpacitySelector && <span>Opacity:</span>}
-    {showOpacitySelector && <OpacitySelector/>}
-    {showClassSelector && <span>Classes:</span>}
-    {showClassSelector && <ClassSelector/>}
-    {showClassViewSelector && <span>Class View:</span>}
-    {showClassViewSelector && <ClassViewSelector/>}
-    {showInstanceFilterSelector && <span>Instance Filter:</span>}
-    {showInstanceFilterSelector && <InstanceFilterSelector/>}
-    {showSankeyEnableCheckbox && <span/>}
-    {showSankeyEnableCheckbox && <SankeyEnableCheckbox/>}
+  return <div style={style} className="all-controls">
+    <FormControl fullWidth component="fieldset">
+      <FormLabel component="legend">Configuration</FormLabel>
+      <Grid container spacing={16} alignItems="center">
+        {showSortingSelector && <Grid xs={12} sm={6} md={3} lg={2} item><SortSelector/></Grid>}
+        {showOpacitySelector && <Grid xs={12} sm={6} md={3} lg={2} item><OpacitySelector/></Grid>}
+        {showClassViewSelector && <Grid xs={12} sm={6} md={3} lg={2} item><ClassViewSelector/></Grid>}
+        {showInstanceFilterSelector && <Grid xs={12} sm={6} md={3} lg={2} item><InstanceFilterSelector/></Grid>}
+        {showSankeyEnableCheckbox && <Grid xs={12} sm={6} md={3} lg={4} item><SankeyEnableCheckbox/></Grid>}
+      </Grid>
+    </FormControl>
+    {showClassSelector && <ClassSelector className="input-element"/>}
+    {showEpochSelector && <EpochSelector/>}
   </div>;
 };
 

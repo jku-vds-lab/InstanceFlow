@@ -1,13 +1,3 @@
-.controls-grid {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    justify-items: stretch;
-    padding: 0 10px;
-    align-items: center;
-    grid-gap:0 10px;
-}
-
-.controls-grid:nth-child(even) {
-    text-align: right;
+.all-controls {
+    margin: 0 16px;
 }
