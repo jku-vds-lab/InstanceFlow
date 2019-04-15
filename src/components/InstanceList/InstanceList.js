@@ -20,8 +20,8 @@ class InstanceList extends Component {
             <TableCell align="center">Image</TableCell>
             <TableCell align="center">Actual</TableCell>
             <TableCell align="center">Distribution</TableCell>
-            <TableCell align="center">Variance</TableCell>
             <TableCell align="center">Variability</TableCell>
+            <TableCell align="center">Frequency</TableCell>
             <TableCell align="center">Score</TableCell>
           </TableRow>
         </TableHead>

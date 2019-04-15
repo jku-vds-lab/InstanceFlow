@@ -65,7 +65,7 @@ const InstanceTableRow = React.memo((props) => {
         )}</div>
     </TableCell>
     <TableCell align="center">{instance.classesVisitedNum}</TableCell>
-    <TableCell align="center">{instance.variability}</TableCell>
+    <TableCell align="center">{instance.frequency}</TableCell>
     <TableCell align="center">{instance.score}</TableCell>
   </TableRow>;
 });

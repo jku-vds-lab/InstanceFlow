@@ -154,7 +154,7 @@ const DataProvider = (props) => {
       });
       instance.classesVisited = classesVisited;
       instance.score = Math.round(wrong / total * 100) / 100;
-      instance.variability = Math.round(jumps / total * 100) / 100;
+      instance.frequency = Math.round(jumps / total * 100) / 100;
       instance.classesVisitedNum = Math.round((classesVisited.size - 1) / data.labels.length * 100) / 100;
       if (instanceFilter === "incorrect") {
         instance.displayInFlow = wrong > 0 && classes.includes(instance.actual);

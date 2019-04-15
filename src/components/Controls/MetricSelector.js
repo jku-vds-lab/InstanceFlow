@@ -9,8 +9,8 @@ import FormHelperText from "@material-ui/core/FormHelperText/FormHelperText";
 const MetricSelector = (props) => {
   const {selectedMetric, onChange, title} = props;
 
-  const metrics = ["none", "score", "classesVisitedNum", "variability"];
-  const metricLabels = ["Default", "Incorrect Ratio", "Number of Visited Classes", "Variability"];
+  const metrics = ["none", "score", "classesVisitedNum", "frequency"];
+  const metricLabels = ["Default", "Incorrect Ratio", "Number of Visited Classes", "Frequency"];
 
   return <FormControl margin="normal" fullWidth>
     <InputLabel shrink htmlFor="metric-selector">
