@@ -8,6 +8,7 @@ import ReactTooltip from "react-tooltip";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import {createMuiTheme} from "@material-ui/core";
 import MuiThemeProvider from "@material-ui/core/es/styles/MuiThemeProvider";
+import Grid from "@material-ui/core/Grid/Grid";
 
 const theme = createMuiTheme({
   typography: {
@@ -43,8 +44,22 @@ class App extends Component {
                   data.raw_data ? <div>
                     <Route path="/" exact component={MainPage}/>
                     <Route path="/changers/" exact component={ChangersPage}/>
-                  </div> : <div><CircularProgress/>
-                    Loading Application</div>
+                  </div> : <Grid
+                    container
+                    spacing={0}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                    style={{minHeight: '100vh'}}
+                  >
+
+                    <Grid item xs={12}>
+                      <CircularProgress/>
+                    </Grid>
+                    <Grid item xs={12}>
+                      Loading Application
+                    </Grid>
+                  </Grid>
                 }
               </DataConsumer>
             </Router>

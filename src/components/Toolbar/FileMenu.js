@@ -2,7 +2,7 @@ import React from "react";
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import FileOpenMenuItem from "./FileOpenMenuItem";
+import FileOpenMenuItem from "../Controls/FileOpenMenuItem";
 
 class FileMenu extends React.Component {
   state = {
@@ -25,7 +25,6 @@ class FileMenu extends React.Component {
         <Button
           aria-owns={anchorEl ? 'file-menu' : undefined}
           aria-haspopup="true"
-          variant="outlined"
           color="inherit"
           onClick={this.handleClick}
         >

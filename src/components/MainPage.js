@@ -6,7 +6,7 @@ import Legend from "./Controls/Legend";
 import InstanceFlow from "./InstanceFlow/InstanceFlow";
 import {FlowDataProvider} from "./InstanceFlow/FlowDataProvider";
 import AllControls from "./Controls/AllControls";
-import AppToolbar from "./Controls/AppToolbar";
+import AppToolbar from "./Toolbar/AppToolbar";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";

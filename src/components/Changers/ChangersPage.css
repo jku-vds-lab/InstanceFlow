@@ -9,7 +9,6 @@
 
 .changers-container {
     display: flex;
-    justify-content: center;
     height: 500px;
     overflow-x: auto;
 }

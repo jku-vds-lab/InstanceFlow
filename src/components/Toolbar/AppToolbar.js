@@ -7,6 +7,7 @@ import {withStyles} from '@material-ui/core/styles';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import FileMenu from "./FileMenu";
 import Dialog from "@material-ui/core/Dialog/Dialog";
+import ViewMenu from "./ViewMenu";
 
 const styles = {
   root: {
@@ -37,7 +38,8 @@ const AppToolbar = (props) => {
           <MenuIcon/>
         </IconButton>*/}
         <FileMenu/>
-        <Typography variant="h6" color="inherit" className={style.grow}></Typography>
+        <ViewMenu/>
+        <Typography align="center" variant="h6" color="inherit" className={style.grow}>InstanceFlow</Typography>
         <IconButton color="inherit" aria-label="Information" onClick={() => setDescriptionModalOpen(true)}>
           <InfoOutlinedIcon/>
         </IconButton>

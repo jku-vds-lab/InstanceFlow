@@ -5,7 +5,7 @@ import Legend from "../Controls/Legend";
 import ChangersContainer from "../Changers/ChangersContainer";
 import AllControls from "../Controls/AllControls";
 import Grid from "@material-ui/core/Grid/Grid";
-import AppToolbar from "../Controls/AppToolbar";
+import AppToolbar from "../Toolbar/AppToolbar";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
