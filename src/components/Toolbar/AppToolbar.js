@@ -30,7 +30,7 @@ const AppToolbar = (props) => {
       open={descriptionModalOpen}
       onClose={() => setDescriptionModalOpen(false)}
     >
-      {infoDialogContent && infoDialogContent}
+      {infoDialogContent}
     </Dialog>
     <AppBar position="static" style={{marginBottom: "10px"}}>
       <Toolbar>
@@ -40,9 +40,10 @@ const AppToolbar = (props) => {
         <FileMenu/>
         <ViewMenu/>
         <Typography align="center" variant="h6" color="inherit" className={style.grow}>InstanceFlow</Typography>
+        {infoDialogContent &&
         <IconButton color="inherit" aria-label="Information" onClick={() => setDescriptionModalOpen(true)}>
           <InfoOutlinedIcon/>
-        </IconButton>
+        </IconButton>}
       </Toolbar>
     </AppBar>
   </div>;

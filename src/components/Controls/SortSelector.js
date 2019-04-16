@@ -1,12 +1,12 @@
 import React from "react";
-import {withFlowData} from "../InstanceFlow/FlowDataProvider";
 import MetricSelector from "./MetricSelector";
+import {withData} from "../DataProvider";
 
 const SortSelector = (props) => {
-  const {sortMetric, setSortMetric} = props.flowData;
+  const {sortMetric, setSortMetric} = props.data;
   return <MetricSelector selectedMetric={sortMetric} title="Instance Sorting" onChange={metric => {
     setSortMetric(metric);
   }}/>;
 };
 
-export default withFlowData(SortSelector);
+export default withData(SortSelector);

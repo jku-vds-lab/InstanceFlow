@@ -5,7 +5,6 @@ import {DataConsumer, DataProvider} from "./components/DataProvider";
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import ChangersPage from "./components/Changers/ChangersPage";
 import ReactTooltip from "react-tooltip";
-import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import {createMuiTheme} from "@material-ui/core";
 import MuiThemeProvider from "@material-ui/core/es/styles/MuiThemeProvider";
 import Grid from "@material-ui/core/Grid/Grid";
@@ -54,7 +53,8 @@ class App extends Component {
                   >
 
                     <Grid item xs={12}>
-                      <CircularProgress/>
+                      {/*<CircularProgress/>*/}
+                      <img src="/logo.gif" alt="Loading Icon" width="100px" height="100px" />
                     </Grid>
                     <Grid item xs={12}>
                       Loading Application

@@ -14,7 +14,6 @@ import Grid from "@material-ui/core/Grid/Grid";
 
 class MainPage extends Component {
   render() {
-    //console.log("MainPage");
     const {epochs, instances, loading, labelsWithOther, colors} = this.props.data;
 
     const hasData = !loading && instances && instances.length !== 0 && epochs;

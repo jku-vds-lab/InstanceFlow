@@ -38,8 +38,11 @@ const DataProvider = (props) => {
             })
             .filter(instance => instance.display)));
     }
+  }, [data, from, to, classes, instanceFilter, sortMetric, clickedInstances]);
+
+  useEffect(() => {
     setLoading(false);
-  }, [data, from, to, classes, instanceFilter, clickedInstances]);
+  }, [instances]);
 
   useEffect(() => {
     setInstances(instances => instances.map(instance => ({
@@ -52,7 +55,7 @@ const DataProvider = (props) => {
 
   const sortInstances = (instances) => {
     return instances.sort((i1, i2) => {
-      return i1.actual - i2.actual || 0;
+      return i1.actual - i2.actual || i2[sortMetric] - i1[sortMetric] || 0;
     });
   };
 
@@ -106,6 +109,7 @@ const DataProvider = (props) => {
         } else {
           classification.type = "stable";
         }
+        classification.type = "stable";
       });
     });
     return data;
@@ -311,7 +315,7 @@ const DataProvider = (props) => {
         //setInstances(sortInstances(instances));
       },
       deactivateInstances: (force = false, ...instances) => {
-        const nonClickedInstances =  instances
+        const nonClickedInstances = instances
           .filter(instance => !instance.clicked || force);
         setActiveInstances(activeInstances => {
           const res = new Set(activeInstances);

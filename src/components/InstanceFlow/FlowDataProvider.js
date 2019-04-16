@@ -3,7 +3,6 @@ import React, {useState, createContext} from "react";
 const FlowDataContext = createContext({});
 
 const FlowDataProvider = (props) => {
-  const [sortMetric, setSortMetric] = useState("none");
   const [opacityMetric, setOpacityMetric] = useState("score");
   const [classView, setClassView] = useState("overview");
   const [sankeyEnabled, setSankeyEnabled] = useState(true);
@@ -38,7 +37,6 @@ const FlowDataProvider = (props) => {
           return res;
         });
       },
-      sortMetric, setSortMetric,
       opacityMetric, setOpacityMetric,
       classView, setClassView,
       sankeyEnabled, setSankeyEnabled
