@@ -4,7 +4,7 @@ import datasets from "../data/data.js";
 const DataContext = createContext({});
 
 const DataProvider = (props) => {
-  const [sortMetric, setSortMetric] = useState("none");
+  const [sortMetric, setSortMetric] = useState("score");
   const [opacityMetric, setOpacityMetric] = useState("score");
   const [data, setData] = useState(null);
   const [epochs, setEpochs] = useState([]);
@@ -55,7 +55,7 @@ const DataProvider = (props) => {
 
   const sortInstances = (instances) => {
     return instances.sort((i1, i2) => {
-      return i1.actual - i2.actual || i2[sortMetric] - i1[sortMetric] || 0;
+      return i2[sortMetric] - i1[sortMetric] || i1.actual - i2.actual ||  0;
     });
   };
 
@@ -109,7 +109,6 @@ const DataProvider = (props) => {
         } else {
           classification.type = "stable";
         }
-        classification.type = "stable";
       });
     });
     return data;
