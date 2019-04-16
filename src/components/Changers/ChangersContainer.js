@@ -8,12 +8,14 @@ const ChangersContainer = (props) => {
   const {getClassesWithOther} = props.data;
   const classesWithOther = getClassesWithOther();
   if (getClassesWithOther().length !== 3) return <span>Please select two classes. </span>;
-  return <div className="changers-container">
-    <ReactTooltip effect="solid"/>
-    {epochs.map(epoch =>
-      <ChangersEpoch key={epoch.id} epoch={epoch} classes={classesWithOther}/>
-    )}
-  </div>
+  return <div className="overflow-container">
+    <div className="changers-container">
+      <ReactTooltip effect="solid"/>
+      {epochs.map(epoch =>
+        <ChangersEpoch key={epoch.id} epoch={epoch} classes={classesWithOther}/>
+      )}
+    </div>
+  </div>;
 };
 
 
