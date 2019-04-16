@@ -6,23 +6,17 @@ import ChangersContainer from "../Changers/ChangersContainer";
 import AllControls from "../Controls/AllControls";
 import Grid from "@material-ui/core/Grid/Grid";
 import AppToolbar from "../Toolbar/AppToolbar";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 
 class ChangersPage extends Component {
   render() {
     //console.log("MainPage");
     const {epochs, loading, labelsWithOther, colors} = this.props.data;
 
-    const infoDialogContent = <div>
-      <DialogTitle>Changers View For Two Classes</DialogTitle>
-      <DialogContent>
-        <DialogContentText></DialogContentText>
-      </DialogContent>
-    </div>;
+    const infoDialogContent = <>
+      Description.. TODO
+    </>;
     return <div>
-      <AppToolbar infoDialogContent={infoDialogContent}/>
+      <AppToolbar infoDialogTitle="Changers View For Two Classes" infoDialogContent={infoDialogContent}/>
       <Grid container justify="space-between">
         <Grid item sm>
           <AllControls showEpochSelector={true}

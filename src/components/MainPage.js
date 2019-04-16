@@ -7,9 +7,6 @@ import InstanceFlow from "./InstanceFlow/InstanceFlow";
 import {FlowDataProvider} from "./InstanceFlow/FlowDataProvider";
 import AllControls from "./Controls/AllControls";
 import AppToolbar from "./Toolbar/AppToolbar";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 import Grid from "@material-ui/core/Grid/Grid";
 
 class MainPage extends Component {
@@ -18,26 +15,21 @@ class MainPage extends Component {
 
     const hasData = Boolean(instances) && instances.length !== 0 && Boolean(epochs);
 
-    const infoDialogContent = <div>
-      <DialogTitle>Evolution of Instance Classification</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          The following is a prototype showing instance classifications over a period of epochs.
-          Two classes of the dataset are compared (here 3 and 8) and the classification is displayed below.
-          {/*Wrongly classified instances are red, correct ones are green and wrong instances, where the predicted class is not 3
+    const infoDialogContent = <>
+      The following is a prototype showing instance classifications over a period of epochs.
+      Two classes of the dataset are compared (here 3 and 8) and the classification is displayed below.
+      {/*Wrongly classified instances are red, correct ones are green and wrong instances, where the predicted class is not 3
           or 8, are gray.<br>
           Hovering over an instance shows the evolution of this instance, clicking on it preserves the selection. The
           instances are sorted by their score, which is now
           just wrong / total classifications (the lower the better). <br/>*/}
-          Additionally, a Sankey-Diagram is drawn to visualize the flow between the classes.
-          The bigger the flow, the more instances changed from class to class.
-          Each Sankey-Flow can be individually styled, such as making incorrect-to-correct flows more visible as in this
-          example.
-        </DialogContentText>
-      </DialogContent>
-    </div>;
+      Additionally, a Sankey-Diagram is drawn to visualize the flow between the classes.
+      The bigger the flow, the more instances changed from class to class.
+      Each Sankey-Flow can be individually styled, such as making incorrect-to-correct flows more visible as in this
+      example.
+    </>;
     return <div>
-      <AppToolbar infoDialogContent={infoDialogContent}/>
+      <AppToolbar infoDialogTitle="Evolution of Instance Classification" infoDialogContent={infoDialogContent}/>
       <FlowDataProvider>
         <Grid container justify="space-between">
           <Grid item sm>

@@ -8,7 +8,11 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import FileMenu from "./FileMenu";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import ViewMenu from "./ViewMenu";
-import {withData} from "../DataProvider";
+import DialogActions from "@material-ui/core/DialogActions/DialogActions";
+import Button from "@material-ui/core/Button/Button";
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
 
 const styles = {
   root: {
@@ -20,14 +24,24 @@ const styles = {
 };
 
 const AppToolbar = (props) => {
-  const {classes: style, infoDialogContent} = props;
+  const {classes: style, infoDialogTitle, infoDialogContent} = props;
   const [descriptionModalOpen, setDescriptionModalOpen] = useState(false);
   return <div className={style.root}>
     <Dialog
       open={descriptionModalOpen}
       onClose={() => setDescriptionModalOpen(false)}
     >
-      {infoDialogContent}
+      <DialogTitle>{infoDialogTitle} <img style={{float: "right", marginLeft: 32}} src="logo.gif" width="36px" height="36px" /></DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          {infoDialogContent}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setDescriptionModalOpen(false)} color="primary">
+          Close
+        </Button>
+      </DialogActions>
     </Dialog>
     <AppBar position="static" style={{marginBottom: "10px"}} color="default">
       <Toolbar variant="dense">

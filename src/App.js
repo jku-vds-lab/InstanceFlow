@@ -64,7 +64,7 @@ class App extends Component {
                       <img src="/logo.gif" alt="Loading Icon" width="100px" height="100px" />
                     </Grid>
                     <Grid item xs={12}>
-                      Loading Application
+                      Loading Application...
                     </Grid>
                   </Grid>
                 }
