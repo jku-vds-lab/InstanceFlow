@@ -2,7 +2,9 @@ import React from "react";
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import FileOpenMenuItem from "../Controls/FileOpenMenuItem";
+import FileOpenMenuItem from "./FileOpenMenuItem";
+import ExportInstancesMenuItem from "./ExportInstancesMenuItem";
+import ImportInstancesMenuItem from "./ImportInstancesMenuItem";
 
 class FileMenu extends React.Component {
   state = {
@@ -35,9 +37,16 @@ class FileMenu extends React.Component {
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          getContentAnchorEl={null}
         >
           <FileOpenMenuItem onDataLoaded={this.handleClose}/>
-          <MenuItem onClick={this.handleClose}>Save Configuration</MenuItem>
+          <MenuItem disabled={true} onClick={this.handleClose}>Save Configuration</MenuItem>
+          <ExportInstancesMenuItem onClick={this.handleClose}/>
+          <ImportInstancesMenuItem onDataLoaded={this.handleClose}/>
         </Menu>
       </div>
     );

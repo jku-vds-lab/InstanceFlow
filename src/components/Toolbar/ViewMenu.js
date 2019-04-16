@@ -2,7 +2,7 @@ import React from "react";
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import {Link as RouterLink} from 'react-router-dom'
+import {Link as RouterLink, withRouter} from 'react-router-dom'
 
 class ViewMenu extends React.Component {
   state = {
@@ -18,6 +18,7 @@ class ViewMenu extends React.Component {
   };
 
   render() {
+    const { location: { pathname } } = this.props;
     const {anchorEl} = this.state;
 
     return (
@@ -35,13 +36,18 @@ class ViewMenu extends React.Component {
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          getContentAnchorEl={null}
         >
-          <MenuItem component={RouterLink} to="/">InstanceFlow</MenuItem>
-          <MenuItem component={RouterLink} to="/changers">ChangerFlow</MenuItem>
+          <MenuItem selected={pathname === "/"} component={RouterLink} to="/">InstanceFlow</MenuItem>
+          <MenuItem selected={pathname === "/changers"} component={RouterLink} to="/changers">ChangerFlow</MenuItem>
         </Menu>
       </div>
     );
   }
 }
 
-export default ViewMenu;
+export default withRouter(ViewMenu);

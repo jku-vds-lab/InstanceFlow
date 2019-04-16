@@ -8,6 +8,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import FileMenu from "./FileMenu";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import ViewMenu from "./ViewMenu";
+import {withData} from "../DataProvider";
 
 const styles = {
   root: {
@@ -15,10 +16,6 @@ const styles = {
   },
   grow: {
     flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
   }
 };
 
@@ -32,8 +29,8 @@ const AppToolbar = (props) => {
     >
       {infoDialogContent}
     </Dialog>
-    <AppBar position="static" style={{marginBottom: "10px"}}>
-      <Toolbar>
+    <AppBar position="static" style={{marginBottom: "10px"}} color="default">
+      <Toolbar variant="dense">
         {/*<IconButton className={style.menuButton} color="inherit" aria-label="Menu">
           <MenuIcon/>
         </IconButton>*/}

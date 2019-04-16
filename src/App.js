@@ -8,12 +8,18 @@ import ReactTooltip from "react-tooltip";
 import {createMuiTheme} from "@material-ui/core";
 import MuiThemeProvider from "@material-ui/core/es/styles/MuiThemeProvider";
 import Grid from "@material-ui/core/Grid/Grid";
+import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline";
 
 const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
   },
   overrides: {
+    MuiAppBar: {
+      colorDefault: {
+        backgroundColor: "white"
+      }
+    },
     MuiTableRow: {
       root: {
         height: "24px"
@@ -35,6 +41,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <CssBaseline />
         <DataProvider>
           <MuiThemeProvider theme={theme}>
             <Router>

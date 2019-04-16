@@ -28,7 +28,7 @@ const DataProvider = (props) => {
   useEffect(() => {
     setLoading(true);
     if (data) {
-      setEpochs(prepareEpochs());
+      setEpochs(prepareEpochs(data, classes, activeInstances, lineInstances));
       setInstances(
         sortInstances(
           data.instances
@@ -53,14 +53,14 @@ const DataProvider = (props) => {
     })));
   }, [activeInstances]);
 
+  const initializeData = (data) => {
+    setData(annotateInstanceData(data));
+  };
+
   const sortInstances = (instances) => {
     return instances.sort((i1, i2) => {
       return i2[sortMetric] - i1[sortMetric] || i1.actual - i2.actual ||  0;
     });
-  };
-
-  const initializeData = (data) => {
-    setData(annotateInstanceData(data));
   };
 
   const annotateInstanceData = (data) => {
@@ -114,20 +114,20 @@ const DataProvider = (props) => {
     return data;
   };
 
-  const prepareEpochs = () => {
+  const prepareEpochs = (data, classes, activeInstances, lineInstances) => {
     // Select the epochs
     const slicedEpochs = data.epochs.slice(from, to + 1);
 
     // Update meta information of instances with selected epochs
-    prepareInstanceMeta();
-    annotateInstanceMeta(slicedEpochs);
+    prepareInstanceMeta(data, activeInstances, lineInstances);
+    annotateInstanceMeta(data, slicedEpochs);
     // Prepare epoch meta array
-    prepareEpochMeta(slicedEpochs);
+    prepareEpochMeta(classes, slicedEpochs);
     annotateEpochMeta(slicedEpochs);
     return slicedEpochs;
   };
 
-  const prepareInstanceMeta = () => {
+  const prepareInstanceMeta = (data) => {
     data.instances.forEach(instance => {
       instance.score = 0;
       instance.display = false;
@@ -137,7 +137,7 @@ const DataProvider = (props) => {
     });
   };
 
-  const annotateInstanceMeta = (epochs) => {
+  const annotateInstanceMeta = (data, epochs) => {
     data.instances.forEach((instance, iIndex) => {
       let total = 0, wrong = 0, jumps = 0;
       let classesVisited = new Set();
@@ -174,7 +174,7 @@ const DataProvider = (props) => {
     });
   };
 
-  const prepareEpochMeta = (epochs) => {
+  const prepareEpochMeta = (classes, epochs) => {
     epochs.forEach(epoch => {
       epoch.stats = {};
 
@@ -197,15 +197,15 @@ const DataProvider = (props) => {
     });
   };
 
-  const annotateEpochMeta = (epochData) => {
+  const annotateEpochMeta = (epochs) => {
     let maxInstancesPerPredictionPerClassTemp = 0;
     let maxInstancesPerPredictionTemp = 0;
-    epochData.forEach((epoch, eIndex) => {
+    epochs.forEach((epoch, eIndex) => {
       epoch.classifications.forEach((classification, cIndex) => {
         let nextClassification;
         //let previousClassification;
-        if (epochData[eIndex + 1])
-          nextClassification = epochData[eIndex + 1].classifications[cIndex];
+        if (epochs[eIndex + 1])
+          nextClassification = epochs[eIndex + 1].classifications[cIndex];
         //if (epochData[eIndex - 1])
         //  previousClassification = epochData[eIndex - 1].classifications[cIndex];
 
@@ -282,7 +282,8 @@ const DataProvider = (props) => {
       to, setTo,
       from, setFrom,
       classes, setClasses,
-      activeInstances, setActiveInstances,
+      activeInstances,
+      clickedInstances,
       labels: data ? data.labels : [],
       labelsWithOther: data ? [...data.labels, "Other"] : [],
       epochs, setEpochs,
@@ -312,6 +313,11 @@ const DataProvider = (props) => {
             return res;
           });
         //setInstances(sortInstances(instances));
+      },
+      deactivateAllInstances: () => {
+        setActiveInstances(new Set());
+        setLineInstances(new Set());
+        setClickedInstances(new Set());
       },
       deactivateInstances: (force = false, ...instances) => {
         const nonClickedInstances = instances

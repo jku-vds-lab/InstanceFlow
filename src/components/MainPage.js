@@ -16,7 +16,7 @@ class MainPage extends Component {
   render() {
     const {epochs, instances, loading, labelsWithOther, colors} = this.props.data;
 
-    const hasData = !loading && instances && instances.length !== 0 && epochs;
+    const hasData = Boolean(instances) && instances.length !== 0 && Boolean(epochs);
 
     const infoDialogContent = <div>
       <DialogTitle>Evolution of Instance Classification</DialogTitle>
@@ -50,7 +50,7 @@ class MainPage extends Component {
                          showSankeyEnableCheckbox={true}
             />
           </Grid>
-          <Grid item sm={4} md={2}>
+          <Grid item xs={12} sm={4} md={2}>
             <Legend labels={labelsWithOther} colors={colors} showTypes={true}/>
           </Grid>
         </Grid>
