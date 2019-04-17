@@ -13,7 +13,7 @@ const InstanceFilterSelector = (props) => {
   const metrics = ["incorrect", "active", "all"];
   const metricLabels = ["Only Incorrect", "Active Instances", "All Instances"];
 
-  return <FormControl margin="normal" fullWidth>
+  return <FormControl margin="dense" fullWidth>
     <InputLabel shrink htmlFor="instance-filter-selector">
       Instance Filter
     </InputLabel>
@@ -27,7 +27,7 @@ const InstanceFilterSelector = (props) => {
         <MenuItem key={valueIndex} value={value}>{metricLabels[valueIndex]}</MenuItem>
       )}
     </Select>
-    <FormHelperText></FormHelperText>
+    {/*<FormHelperText></FormHelperText>*/}
   </FormControl>;
 };
 

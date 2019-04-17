@@ -59,7 +59,7 @@ const DataProvider = (props) => {
 
   const sortInstances = (instances) => {
     return instances.sort((i1, i2) => {
-      return i2[sortMetric] - i1[sortMetric] || i1.actual - i2.actual ||  0;
+      return i2[sortMetric] - i1[sortMetric] || i1.actual - i2.actual || 0;
     });
   };
 
@@ -141,24 +141,24 @@ const DataProvider = (props) => {
     data.instances.forEach((instance, iIndex) => {
       let total = 0, wrong = 0, jumps = 0;
       let classesVisited = new Set();
-      epochs.forEach(epoch => {
+      epochs.forEach((epoch, eIndex) => {
         const classification = epoch.classifications[iIndex];
-        // Count total
-        total++;
         // Count incorrect
         if (!classification.isCorrect) wrong++;
         // Count jumps
-        const type = classification.type;
-        if (type === "out" || type === "inout") {
-          jumps++;
+        if (eIndex + 1 < epochs.length) {
+          const type = classification.type;
+          if (type === "out" || type === "inout") {
+            jumps++;
+          }
         }
         // Count classes visited
         classesVisited.add(classification.predicted);
       });
       instance.classesVisited = classesVisited;
-      instance.score = Math.round(wrong / total * 100) / 100;
-      instance.frequency = Math.round(jumps / total * 100) / 100;
-      instance.classesVisitedNum = Math.round((classesVisited.size - 1) / data.labels.length * 100) / 100;
+      instance.score = Math.round(wrong / epochs.length * 100) / 100;
+      instance.frequency = Math.round(jumps / (epochs.length - 1) * 100) / 100;
+      instance.classesVisitedNum = Math.round(classesVisited.size / data.labels.length * 100) / 100;
       if (instanceFilter === "incorrect") {
         instance.displayInFlow = wrong > 0 && classes.includes(instance.actual);
         instance.displayInList = instance.displayInFlow;

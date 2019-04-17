@@ -30,7 +30,7 @@ class InstanceBox extends Component {
     if (!instance) return null;
     return <SimpleBox type={classification.type}
                       color={instance.active ? "gold" : getColor(instance.actual)}
-                      opacity={instance.active ? 1.0 : (instance[opacityMetric] || 1.0)}
+                      opacity={instance.active ? 1.0 : (instance[opacityMetric] === undefined ? 1.0 : Math.max(instance[opacityMetric], 0.1))}
                       tooltipText={`${getLabel(instance.actual)} as ${getLabel(classification.predicted)}`}
                       style={style}
                       id={instance.id}

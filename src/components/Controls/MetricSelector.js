@@ -12,7 +12,7 @@ const MetricSelector = (props) => {
   const metrics = ["none", "score", "classesVisitedNum", "frequency"];
   const metricLabels = ["Default", "Incorrect Ratio", "Number of Visited Classes", "Frequency"];
 
-  return <FormControl margin="normal" fullWidth>
+  return <FormControl margin="dense" fullWidth>
     <InputLabel shrink htmlFor="metric-selector">
       {title}
     </InputLabel>
@@ -26,7 +26,7 @@ const MetricSelector = (props) => {
         <MenuItem key={valueIndex} value={value}>{metricLabels[valueIndex]}</MenuItem>
       )}
     </Select>
-    <FormHelperText></FormHelperText>
+    {/*<FormHelperText></FormHelperText>*/}
   </FormControl>;
 };
 

@@ -8,6 +8,10 @@ import Grid from "@material-ui/core/Grid/Grid";
 import AppToolbar from "../Toolbar/AppToolbar";
 
 class ChangersPage extends Component {
+  componentDidMount() {
+    document.title = "ClassFlow";
+  }
+
   render() {
     //console.log("MainPage");
     const {epochs, loading, labelsWithOther, colors} = this.props.data;
@@ -16,7 +20,7 @@ class ChangersPage extends Component {
       Description.. TODO
     </>;
     return <div>
-      <AppToolbar infoDialogTitle="Changers View For Two Classes" infoDialogContent={infoDialogContent}/>
+      <AppToolbar title="ClassFlow" infoDialogTitle="Changers View For Two Classes" infoDialogContent={infoDialogContent}/>
       <Grid container justify="space-between">
         <Grid item sm>
           <AllControls showEpochSelector={true}
@@ -24,8 +28,8 @@ class ChangersPage extends Component {
                        showInstanceFilterSelector={true}
           />
         </Grid>
-        <Grid item sm={4} md={2}>
-          <Legend labels={labelsWithOther} colors={colors} showTypes={true}/>
+        <Grid item sm={2} md={1}>
+          <Legend labels={labelsWithOther} colors={colors} showTypes={false}/>
         </Grid>
       </Grid>
       {!loading && <ChangersContainer epochs={epochs}/>}

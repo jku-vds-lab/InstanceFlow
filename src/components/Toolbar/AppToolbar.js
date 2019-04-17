@@ -24,7 +24,7 @@ const styles = {
 };
 
 const AppToolbar = (props) => {
-  const {classes: style, infoDialogTitle, infoDialogContent} = props;
+  const {classes: style, title, infoDialogTitle, infoDialogContent} = props;
   const [descriptionModalOpen, setDescriptionModalOpen] = useState(false);
   return <div className={style.root}>
     <Dialog
@@ -50,7 +50,7 @@ const AppToolbar = (props) => {
         </IconButton>*/}
         <FileMenu/>
         <ViewMenu/>
-        <Typography align="center" variant="h6" color="inherit" className={style.grow}>InstanceFlow</Typography>
+        <Typography align="center" variant="h6" color="inherit" className={style.grow}>{title}</Typography>
         {infoDialogContent &&
         <IconButton color="inherit" aria-label="Information" onClick={() => setDescriptionModalOpen(true)}>
           <InfoOutlinedIcon/>

@@ -43,7 +43,7 @@ class ViewMenu extends React.Component {
           getContentAnchorEl={null}
         >
           <MenuItem selected={pathname === "/"} component={RouterLink} to="/">InstanceFlow</MenuItem>
-          <MenuItem selected={pathname === "/changers"} component={RouterLink} to="/changers">ChangerFlow</MenuItem>
+          <MenuItem selected={pathname === "/changers"} component={RouterLink} to="/changers">ClassFlow</MenuItem>
         </Menu>
       </div>
     );

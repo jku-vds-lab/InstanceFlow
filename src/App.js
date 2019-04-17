@@ -72,7 +72,7 @@ class App extends Component {
             </Router>
           </MuiThemeProvider>
         </DataProvider>
-        <ReactTooltip effect="solid"/>
+        <ReactTooltip/>
       </div>
     );
   }

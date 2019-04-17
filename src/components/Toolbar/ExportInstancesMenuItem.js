@@ -23,7 +23,7 @@ const ExportInstancesMenuItem = (props) => {
                      onClick();
                    }}
   >
-    Export Active Instances
+    Export Active Instances...
   </MenuItem>;
 };
 

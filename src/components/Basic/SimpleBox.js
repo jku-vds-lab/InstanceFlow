@@ -7,6 +7,7 @@ class SimpleBox extends PureComponent {
 
     return <div
         data-tip={tooltipText}
+        data-effect="solid"
         className={`box ${type}`}
         style={{
           ...style,

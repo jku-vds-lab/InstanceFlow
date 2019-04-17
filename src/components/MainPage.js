@@ -10,6 +10,11 @@ import AppToolbar from "./Toolbar/AppToolbar";
 import Grid from "@material-ui/core/Grid/Grid";
 
 class MainPage extends Component {
+  componentDidMount() {
+    document.title = "InstanceFlow";
+  }
+
+
   render() {
     const {epochs, instances, loading, labelsWithOther, colors} = this.props.data;
 
@@ -29,7 +34,7 @@ class MainPage extends Component {
       example.
     </>;
     return <div>
-      <AppToolbar infoDialogTitle="Evolution of Instance Classification" infoDialogContent={infoDialogContent}/>
+      <AppToolbar title="InstanceFlow" infoDialogTitle="Evolution of Instance Classification" infoDialogContent={infoDialogContent}/>
       <FlowDataProvider>
         <Grid container justify="space-between">
           <Grid item sm>

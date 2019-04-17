@@ -13,7 +13,7 @@ const ClassViewSelector = (props) => {
   const views = ["overview", "instances"];
   const viewLabels = ["Overview", "Instance View"];
 
-  return <FormControl fullWidth margin="normal">
+  return <FormControl fullWidth margin="dense">
     <InputLabel shrink htmlFor="class-view-selector">
       Class View
     </InputLabel>
@@ -27,7 +27,7 @@ const ClassViewSelector = (props) => {
         <MenuItem key={valueIndex} value={value}>{viewLabels[valueIndex]}</MenuItem>
       )}
     </Select>
-    <FormHelperText></FormHelperText>
+    {/*<FormHelperText></FormHelperText>*/}
   </FormControl>;
 };
 

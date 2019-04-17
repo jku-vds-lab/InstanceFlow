@@ -17,7 +17,7 @@ class ChangersEpoch extends Component {
     for (const clazz of classes) {
       if (!epoch.stats[clazz.toString()]) return null;
     }
-    console.log(epoch);
+
     return <div className="changers-epoch">
         <ChangersClassBars epoch={epoch} current={classes[0]} top={classes[2]} bottom={classes[1]}/>
         <ChangersBarSeparator/>
