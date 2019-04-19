@@ -17,7 +17,7 @@ const ClassSelector = (props) => {
     <FormGroup row style={{marginLeft: "8px"}}>
       <Grid container spacing={16}>
         {labels.map((label, labelIndex) =>
-          <Grid key={label} xs={6} sm={3} md={2} lg={1} item>
+          <Grid key={label} item>
             <FormControlLabel
               control={
                 <Checkbox

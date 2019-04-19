@@ -15,7 +15,9 @@ class InstanceClassBars extends PureComponent {
               return <InstanceBox key={instance.id}
                                   epoch={epoch}
                                   instance={instance}
-                                  classification={classification}/>;
+                                  classification={classification}
+                                  style={{order: instance.actual}}
+                                  />;
             }
           )}
         </div>

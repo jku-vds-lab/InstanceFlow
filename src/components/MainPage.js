@@ -36,7 +36,7 @@ class MainPage extends Component {
     return <div>
       <AppToolbar title="InstanceFlow" infoDialogTitle="Evolution of Instance Classification" infoDialogContent={infoDialogContent}/>
       <FlowDataProvider>
-        <Grid container justify="space-between">
+        <Grid container alignItems="center">
           <Grid item sm>
             <AllControls showEpochSelector={true}
                          showSortingSelector={true}
@@ -47,7 +47,7 @@ class MainPage extends Component {
                          showSankeyEnableCheckbox={true}
             />
           </Grid>
-          <Grid item xs={12} sm={4} md={2}>
+          <Grid item>
             <Legend labels={labelsWithOther} colors={colors} showTypes={true}/>
           </Grid>
         </Grid>

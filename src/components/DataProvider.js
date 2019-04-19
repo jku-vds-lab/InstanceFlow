@@ -21,7 +21,13 @@ const DataProvider = (props) => {
   const [maxInstancesPerPrediction, setMaxInstancesPerPrediction] = useState(0);
   const [colors, setColors] = useState(["#ff0029", "#377eb8", "#66a61e", "#984ea3", "#00d2d5", "#ff7f00", "#af8d00", "#7f80cd", "#b3e900", "#c42e60", "lightgray"]);
 
+  // sleep time expects milliseconds
+  function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
   useEffect(() => {
+    //sleep(0).then(() => initializeData(datasets.CIFAR10));
     initializeData(datasets.CIFAR10);
   }, []);
 

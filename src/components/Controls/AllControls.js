@@ -30,7 +30,7 @@ const AllControls = (props) => {
         {showOpacitySelector && <Grid xs={12} sm={6} md={3} lg={2} item><OpacitySelector/></Grid>}
         {showClassViewSelector && <Grid xs={12} sm={6} md={3} lg={2} item><ClassViewSelector/></Grid>}
         {showInstanceFilterSelector && <Grid xs={12} sm={6} md={3} lg={2} item><InstanceFilterSelector/></Grid>}
-        {showSankeyEnableCheckbox && <Grid xs={12} sm={6} md={3} lg={4} item><SankeyEnableCheckbox/></Grid>}
+        {showSankeyEnableCheckbox && <Grid xs={12} sm={6} md={3} lg={2} item><SankeyEnableCheckbox/></Grid>}
       </Grid>
     </FormControl>
     {showClassSelector && <ClassSelector className="input-element"/>}
