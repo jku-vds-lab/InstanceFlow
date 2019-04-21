@@ -1,4 +1,5 @@
-import React, {useState, createContext} from "react";
+import React, {useState, createContext, useEffect} from "react";
+import ReactTooltip from "react-tooltip";
 
 const FlowDataContext = createContext({});
 
@@ -8,6 +9,10 @@ const FlowDataProvider = (props) => {
   const [sankeyEnabled, setSankeyEnabled] = useState(true);
   const [boxElements, setBoxElements] = useState(new Map());
   const [containerElements, setContainerElements] = useState(new Map());
+
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  }, [sankeyEnabled]);
 
   return (
     <FlowDataContext.Provider value={{

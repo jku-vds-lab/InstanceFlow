@@ -37,11 +37,16 @@ const theme = createMuiTheme({
   }
 });
 
+if (process.env.NODE_ENV !== 'production') {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render');
+  whyDidYouRender(React);
+}
+
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <CssBaseline />
+        <CssBaseline/>
         <DataProvider>
           <MuiThemeProvider theme={theme}>
             <Router>
@@ -61,7 +66,7 @@ class App extends Component {
 
                     <Grid item xs={12}>
                       {/*<CircularProgress/>*/}
-                      <img src="/logo.gif" alt="Loading Icon" width="100px" height="100px" />
+                      <img src="/logo.gif" alt="Loading Icon" width="100px" height="100px"/>
                     </Grid>
                     <Grid item xs={12}>
                       Loading Application...

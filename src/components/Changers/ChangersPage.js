@@ -6,10 +6,12 @@ import ChangersContainer from "../Changers/ChangersContainer";
 import AllControls from "../Controls/AllControls";
 import Grid from "@material-ui/core/Grid/Grid";
 import AppToolbar from "../Toolbar/AppToolbar";
+import ReactTooltip from "react-tooltip";
 
 class ChangersPage extends Component {
   componentDidMount() {
     document.title = "ClassFlow";
+    ReactTooltip.rebuild();
   }
 
   render() {

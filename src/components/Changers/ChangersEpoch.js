@@ -4,14 +4,6 @@ import ReactTooltip from "react-tooltip";
 import ChangersClassBars from "./ChangersClassBars";
 
 class ChangersEpoch extends Component {
-  componentDidUpdate() {
-    ReactTooltip.rebuild()
-  }
-
-  componentDidMount() {
-    ReactTooltip.rebuild()
-  }
-
   render() {
     const {epoch, classes} = this.props;
     for (const clazz of classes) {

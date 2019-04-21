@@ -1,5 +1,6 @@
 import React, {useState, createContext, useEffect} from "react";
 import datasets from "../data/data.js";
+import ReactTooltip from "react-tooltip";
 
 const DataContext = createContext({});
 
@@ -44,20 +45,23 @@ const DataProvider = (props) => {
             })
             .filter(instance => instance.display)));
     }
-  }, [data, from, to, classes, instanceFilter, sortMetric, clickedInstances]);
+  }, [data, from, to, classes, instanceFilter, sortMetric]);
 
   useEffect(() => {
     setLoading(false);
+    setTimeout(() => {
+      ReactTooltip.rebuild();
+    }, 100);
   }, [instances]);
 
-  useEffect(() => {
-    setInstances(instances => instances.map(instance => ({
-      ...instance,
-      active: activeInstances.has(instance.id),
-      lines: lineInstances.has(instance.id),
-      clicked: clickedInstances.has(instance.id)
-    })));
-  }, [activeInstances]);
+  //useEffect(() => {
+  //  setInstances(instances => instances.map(instance => ({
+  //    ...instance,
+  //    active: activeInstances.has(instance.id),
+  //    lines: lineInstances.has(instance.id),
+  //    clicked: clickedInstances.has(instance.id)
+  //  })));
+  //}, [activeInstances]);
 
   const initializeData = (data) => {
     setData(annotateInstanceData(data));
@@ -137,15 +141,15 @@ const DataProvider = (props) => {
     data.instances.forEach(instance => {
       instance.score = 0;
       instance.display = false;
-      instance.active = activeInstances.has(instance.id);
-      instance.lines = lineInstances.has(instance.id);
-      instance.clicked = clickedInstances.has(instance.id);
+      //instance.active = activeInstances.has(instance.id);
+      //instance.lines = lineInstances.has(instance.id);
+      //instance.clicked = clickedInstances.has(instance.id);
     });
   };
 
   const annotateInstanceMeta = (data, epochs) => {
     data.instances.forEach((instance, iIndex) => {
-      let total = 0, wrong = 0, jumps = 0;
+      let wrong = 0, jumps = 0;
       let classesVisited = new Set();
       epochs.forEach((epoch, eIndex) => {
         const classification = epoch.classifications[iIndex];
@@ -169,7 +173,7 @@ const DataProvider = (props) => {
         instance.displayInFlow = wrong > 0 && classes.includes(instance.actual);
         instance.displayInList = instance.displayInFlow;
       } else if (instanceFilter === "active") {
-        instance.displayInFlow = instance.clicked && classes.includes(instance.actual);
+        instance.displayInFlow = clickedInstances.has(instance.id) && classes.includes(instance.actual);
         instance.displayInList = wrong > 0 && classes.includes(instance.actual);
       } else if (instanceFilter === "all") {
         instance.displayInFlow = classes.includes(instance.actual);
@@ -290,6 +294,7 @@ const DataProvider = (props) => {
       classes, setClasses,
       activeInstances,
       clickedInstances,
+      lineInstances,
       labels: data ? data.labels : [],
       labelsWithOther: data ? [...data.labels, "Other"] : [],
       epochs, setEpochs,
@@ -327,7 +332,7 @@ const DataProvider = (props) => {
       },
       deactivateInstances: (force = false, ...instances) => {
         const nonClickedInstances = instances
-          .filter(instance => !instance.clicked || force);
+          .filter(instance => !clickedInstances.has(instance.id) || force);
         setActiveInstances(activeInstances => {
           const res = new Set(activeInstances);
           nonClickedInstances

@@ -8,12 +8,13 @@ import {FlowDataProvider} from "./InstanceFlow/FlowDataProvider";
 import AllControls from "./Controls/AllControls";
 import AppToolbar from "./Toolbar/AppToolbar";
 import Grid from "@material-ui/core/Grid/Grid";
+import ReactTooltip from "react-tooltip";
 
 class MainPage extends Component {
   componentDidMount() {
     document.title = "InstanceFlow";
+    ReactTooltip.rebuild();
   }
-
 
   render() {
     const {epochs, instances, loading, labelsWithOther, colors} = this.props.data;

@@ -7,11 +7,13 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import InstanceTableRow from "./InstanceTableRow";
+import {withData} from "../DataProvider";
 
 class InstanceList extends Component {
   render() {
     const {instances, epochs} = this.props;
     const {sortMetric} = this.props.flowData;
+    const {clickedInstances} = this.props.data;
     return <div className="instance-list">
       <Table padding="dense">
         <TableHead>
@@ -26,13 +28,17 @@ class InstanceList extends Component {
           </TableRow>
         </TableHead>
         <TableBody>
-          {instances.filter(instance => instance.displayInList).concat().sort((i1, i2) => i2.clicked - i1.clicked || i2[sortMetric] - i1[sortMetric] || 0).map(instance =>
-            <InstanceTableRow key={instance.id} instance={instance} epochs={epochs}/>
-          )}
+          {instances
+            .filter(instance => instance.displayInList)
+            .concat()
+            .sort((i1, i2) => clickedInstances.has(i2.id) - clickedInstances.has(i1.id) || i2[sortMetric] - i1[sortMetric] || 0)
+            .map(instance =>
+              <InstanceTableRow key={instance.id} instance={instance} epochs={epochs}/>
+            )}
         </TableBody>
       </Table>
     </div>;
   }
 }
 
-export default withFlowData(InstanceList);
+export default withFlowData(withData(InstanceList));

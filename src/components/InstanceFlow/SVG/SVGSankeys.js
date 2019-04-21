@@ -11,10 +11,6 @@ class SVGSankeys extends Component {
       this.props.containerElements !== nextProps.containerElements;
   }
 
-  componentDidUpdate() {
-    ReactTooltip.rebuild()
-  }
-
   render() {
     //console.log("SVGSankeys");
     const {epochs, svgBounds, containerElements} = this.props;

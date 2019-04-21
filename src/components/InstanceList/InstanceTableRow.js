@@ -1,73 +1,59 @@
-import React from "react";
+import React, {Component} from "react";
 import {withData} from "../DataProvider";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import "./InstanceTableRow.css";
+import InstanceDistributionChart from "./InstanceDistributionChart";
 
-const InstanceTableRow = React.memo((props) => {
-  const {instance, epochs} = props;
-  const {getLabel, getColor, activateInstances, deactivateInstances} = props.data;
+class InstanceTableRow extends Component {
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    return this.props.instance !== nextProps.instance ||
+      this.props.epochs !== nextProps.epochs ||
+      this.props.data.activeInstances.has(this.props.instance.id) !== nextProps.data.activeInstances.has(nextProps.instance.id) ||
+      this.props.data.clickedInstances.has(this.props.instance.id) !== nextProps.data.clickedInstances.has(nextProps.instance.id) ||
+      this.props.classification !== nextProps.classification;
+  }
 
-  const distributionPairs = epochs.reduce((acc, curr) => {
-    const predicted = curr.classifications[instance.index].predicted;
-    const lastIndex = acc.length - 1;
-    const lastElement = acc[lastIndex];
+  render() {
+    const {instance, epochs} = this.props;
+    const {getLabel, getColor, activeInstances, clickedInstances, activateInstances, deactivateInstances} = this.props.data;
 
-    if (lastElement !== undefined && predicted === lastElement[0]) {
-      lastElement[1]++;
-    } else {
-      acc.push([predicted, 1]);
-    }
-    return acc;
-  }, []);
-
-  return <TableRow>
-    <TableCell align="center" component="th" scope="row">
-      {instance.id}
-    </TableCell>
-    <TableCell align="center">
-      <img className={`box-img ${instance.active ? "active" : ""}`} src={instance.image} data-id={instance.id}
-           alt={`Instance ${instance.id}`}
-           onMouseOver={e => {
-             //if (!instance.clicked)
-             //  activateInstances({lines: true}, instance)
-           }}
-           onMouseOut={e => {
-             //if (!instance.clicked)
-             //  deactivateInstances(false, instance);
-           }}
-           onClick={e => {
-             if (!instance.clicked) {
-               activateInstances({clicked: true, lines: true}, instance);
-             } else {
-               //activateInstances({clicked: false, lines: false}, instance);
-               deactivateInstances(true, instance);
-             }
-           }}/>
-    </TableCell>
-    <TableCell align="center" style={{
-      color: getColor(instance.actual)
-    }}>{getLabel(instance.actual)}</TableCell>
-    <TableCell align="center" style={{width: "35%"}}>
-      <div className="bar-chart-container" style={{
-        display: "flex"
-      }}>
-        {distributionPairs.map((pair, i) =>
-          <div key={i}
-               data-tip={`${pair[1]} ${getLabel(pair[0])}(s)`}
-               className="bar-chart"
-               style={{
-                 flex: pair[1],
-                 height: "20px",
-                 //"--box-color": getIncludedOrOtherColor(pair[0])
-                 "--box-color": getColor(pair[0])
-               }}/>
-        )}</div>
-    </TableCell>
-    <TableCell align="center">{instance.classesVisitedNum}</TableCell>
-    <TableCell align="center">{instance.frequency}</TableCell>
-    <TableCell align="center">{instance.score}</TableCell>
-  </TableRow>;
-});
+    return <TableRow>
+      <TableCell align="center" component="th" scope="row">
+        {instance.id}
+      </TableCell>
+      <TableCell align="center">
+        <img className={`box-img ${activeInstances.has(instance.id) ? "active" : ""}`} src={instance.image}
+             data-id={instance.id}
+             alt={`Instance ${instance.id}`}
+             onMouseOver={e => {
+               //if (!instance.clicked)
+               //  activateInstances({lines: true}, instance)
+             }}
+             onMouseOut={e => {
+               //if (!instance.clicked)
+               //  deactivateInstances(false, instance);
+             }}
+             onClick={e => {
+               if (!clickedInstances.has(instance.id)) {
+                 activateInstances({clicked: true, lines: true}, instance);
+               } else {
+                 //activateInstances({clicked: false, lines: false}, instance);
+                 deactivateInstances(true, instance);
+               }
+             }}/>
+      </TableCell>
+      <TableCell align="center" style={{
+        color: getColor(instance.actual)
+      }}>{getLabel(instance.actual)}</TableCell>
+      <TableCell align="center" style={{width: "35%"}}>
+        <InstanceDistributionChart instance={instance} epochs={epochs} />
+      </TableCell>
+      <TableCell align="center">{instance.classesVisitedNum}</TableCell>
+      <TableCell align="center">{instance.frequency}</TableCell>
+      <TableCell align="center">{instance.score}</TableCell>
+    </TableRow>;
+  }
+}
 
 export default withData(InstanceTableRow);
