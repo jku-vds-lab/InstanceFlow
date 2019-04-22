@@ -12,7 +12,7 @@ const FlowDataProvider = (props) => {
 
   useEffect(() => {
     ReactTooltip.rebuild();
-  }, [sankeyEnabled]);
+  }, [sankeyEnabled, classView]);
 
   return (
     <FlowDataContext.Provider value={{

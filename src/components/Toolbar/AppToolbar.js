@@ -31,7 +31,7 @@ const AppToolbar = (props) => {
       open={descriptionModalOpen}
       onClose={() => setDescriptionModalOpen(false)}
     >
-      <DialogTitle>{infoDialogTitle} <img style={{float: "right", marginLeft: 32}} src="logo.gif" width="36px" height="36px" /></DialogTitle>
+      <DialogTitle>{infoDialogTitle} <img style={{float: "right", marginLeft: 32}} alt="Logo Animation" src="logo.gif" width="36px" height="36px" /></DialogTitle>
       <DialogContent>
         <DialogContentText>
           {infoDialogContent}

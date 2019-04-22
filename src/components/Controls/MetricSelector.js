@@ -4,7 +4,6 @@ import Select from "@material-ui/core/Select/Select";
 import Input from "@material-ui/core/Input/Input";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
-import FormHelperText from "@material-ui/core/FormHelperText/FormHelperText";
 
 const MetricSelector = (props) => {
   const {selectedMetric, onChange, title} = props;

@@ -1,7 +1,6 @@
 import React from "react";
 import ChangersEpoch from "./ChangersEpoch";
 import {withData} from "../DataProvider";
-import ReactTooltip from "react-tooltip";
 
 const ChangersContainer = (props) => {
   const {epochs} = props;

@@ -5,7 +5,6 @@ import InputLabel from "@material-ui/core/InputLabel/InputLabel";
 import Select from "@material-ui/core/Select/Select";
 import Input from "@material-ui/core/Input/Input";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText/FormHelperText";
 
 const ClassViewSelector = (props) => {
   const {classView, setClassView} = props.flowData;

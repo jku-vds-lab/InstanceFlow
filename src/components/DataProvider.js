@@ -23,9 +23,9 @@ const DataProvider = (props) => {
   const [colors, setColors] = useState(["#ff0029", "#377eb8", "#66a61e", "#984ea3", "#00d2d5", "#ff7f00", "#af8d00", "#7f80cd", "#b3e900", "#c42e60", "lightgray"]);
 
   // sleep time expects milliseconds
-  function sleep(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-  }
+  //function sleep(time) {
+  //  return new Promise((resolve) => setTimeout(resolve, time));
+  //}
 
   useEffect(() => {
     //sleep(0).then(() => initializeData(datasets.CIFAR10));
@@ -332,7 +332,9 @@ const DataProvider = (props) => {
       },
       deactivateInstances: (force = false, ...instances) => {
         const nonClickedInstances = instances
-          .filter(instance => !clickedInstances.has(instance.id) || force);
+          .filter(instance => {
+            return !clickedInstances.has(instance.id) || force
+          });
         setActiveInstances(activeInstances => {
           const res = new Set(activeInstances);
           nonClickedInstances
@@ -365,10 +367,10 @@ const DataProvider = (props) => {
       getClassesWithOther,
       getIncludedOrOtherIndex
     }}>
-      {props.children}
-    </DataContext.Provider>
-  )
-};
+    {props.children}
+      </DataContext.Provider>
+      )
+    };
 
 const DataConsumer = DataContext.Consumer;
 
@@ -390,6 +392,6 @@ export function withData(MyComponent) {
   }
 
   return React.forwardRef((props, ref) => {
-    return (<WithData {...props} forwardedRef={ref}/>);
-  });
+  return (<WithData {...props} forwardedRef={ref}/>);
+});
 }

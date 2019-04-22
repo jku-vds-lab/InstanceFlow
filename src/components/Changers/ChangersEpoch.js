@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import ChangersBarSeparator from "./ChangersBarSeparator";
-import ReactTooltip from "react-tooltip";
 import ChangersClassBars from "./ChangersClassBars";
 
 class ChangersEpoch extends Component {

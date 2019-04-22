@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import "./SVGBasicSankey.css";
-import ReactTooltip from "react-tooltip";
 
 class SVGBasicSankey extends Component {
   state = {
