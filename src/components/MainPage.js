@@ -9,6 +9,7 @@ import AllControls from "./Controls/AllControls";
 import AppToolbar from "./Toolbar/AppToolbar";
 import Grid from "@material-ui/core/Grid/Grid";
 import ReactTooltip from "react-tooltip";
+import InstanceList2 from "./InstanceList/InstanceList2";
 
 class MainPage extends Component {
   componentDidMount() {
@@ -53,7 +54,7 @@ class MainPage extends Component {
           </Grid>
         </Grid>
         {hasData && <InstanceFlow instances={instances} epochs={epochs}/>}
-        {hasData && <InstanceList instances={instances} epochs={epochs}/>}
+        {hasData && <InstanceList2 instances={instances} epochs={epochs}/>}
       </FlowDataProvider>
     </div>;
   }

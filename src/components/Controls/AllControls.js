@@ -10,6 +10,7 @@ import "./AllControls.css";
 import Grid from "@material-ui/core/Grid/Grid";
 import FormLabel from "@material-ui/core/FormLabel/FormLabel";
 import FormControl from "@material-ui/core/FormControl/FormControl";
+import DatasetSelector from "./DatasetSelector";
 
 const AllControls = (props) => {
   const {
@@ -20,6 +21,7 @@ const AllControls = (props) => {
     showClassViewSelector,
     showInstanceFilterSelector,
     showSankeyEnableCheckbox,
+    showDatasetSelector,
     style
   } = props;
   return <div style={style} className="all-controls">
@@ -30,6 +32,7 @@ const AllControls = (props) => {
         {showOpacitySelector && <Grid xs={12} sm={6} md={3} lg={2} item><OpacitySelector/></Grid>}
         {showClassViewSelector && <Grid xs={12} sm={6} md={3} lg={2} item><ClassViewSelector/></Grid>}
         {showInstanceFilterSelector && <Grid xs={12} sm={6} md={3} lg={2} item><InstanceFilterSelector/></Grid>}
+        {showDatasetSelector && <Grid xs={12} sm={6} md={3} lg={2} item><DatasetSelector/></Grid>}
         {showSankeyEnableCheckbox && <Grid xs={12} sm={6} md={3} lg={2} item><SankeyEnableCheckbox/></Grid>}
       </Grid>
     </FormControl>
@@ -39,6 +42,7 @@ const AllControls = (props) => {
 };
 
 AllControls.defaultProps = {
+  showDatasetSelector: true,
   showEpochSelector: true,
   showClassSelector: true,
   showDataUploadInput: true,
