@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import InstanceList from "./InstanceList/InstanceList";
+import InstanceListLineUp from "./InstanceList/InstanceListLineUp";
 import {withData} from "./DataProvider";
 import "./MainPage.css";
 import Legend from "./Controls/Legend";
@@ -9,7 +9,6 @@ import AllControls from "./Controls/AllControls";
 import AppToolbar from "./Toolbar/AppToolbar";
 import Grid from "@material-ui/core/Grid/Grid";
 import ReactTooltip from "react-tooltip";
-import InstanceList2 from "./InstanceList/InstanceList2";
 
 class MainPage extends Component {
   componentDidMount() {
@@ -54,7 +53,7 @@ class MainPage extends Component {
           </Grid>
         </Grid>
         {hasData && <InstanceFlow instances={instances} epochs={epochs}/>}
-        {hasData && <InstanceList2 instances={instances} epochs={epochs}/>}
+        {hasData && <InstanceListLineUp instances={instances} epochs={epochs}/>}
       </FlowDataProvider>
     </div>;
   }

@@ -37,11 +37,6 @@ const theme = createMuiTheme({
   }
 });
 
-if (process.env.NODE_ENV !== 'production') {
-  const whyDidYouRender = require('@welldone-software/why-did-you-render');
-  whyDidYouRender(React);
-}
-
 class App extends Component {
   render() {
     return (

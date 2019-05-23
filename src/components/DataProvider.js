@@ -29,6 +29,19 @@ const DataProvider = (props) => {
   useEffect(() => {
     //sleep(0).then(() => initializeData(datasets.CIFAR10));
     //initializeData(datasets.CIFAR10);
+    fetch(`datasets/cifar10.json`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("HTTP error " + response.status);
+        }
+        return response.json();
+      })
+      .then(json => {
+        initializeData(json);
+      })
+      .catch(error => {
+        console.log(error);
+      })
   }, []);
 
   useEffect(() => {
