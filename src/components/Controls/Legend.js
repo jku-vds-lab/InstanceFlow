@@ -5,6 +5,7 @@ import "./Legend.css"
 const Legend = (props) => {
   const {labels, colors, showTypes} = props;
   return <div style={{display: "flex", justifyContent: "center"}}>
+    {labels.length !== 0 &&
     <div>
       {labels.map((label, labelIndex) =>
         <div key={label} className="legend-row">
@@ -15,6 +16,7 @@ const Legend = (props) => {
         </div>
       )}
     </div>
+    }
     {showTypes && <div>
       {["in", "stable", "inout", "out"].map(type =>
         <div key={type} className="legend-row">

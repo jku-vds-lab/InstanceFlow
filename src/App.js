@@ -52,7 +52,7 @@ class App extends Component {
             <Router>
               <DataConsumer>
                 {data =>
-                  data.raw_data ? <div>
+                  true ? <div>
                     <Route path="/" exact component={MainPage}/>
                     <Route path="/changers/" exact component={ChangersPage}/>
                   </div> : <Grid
@@ -63,7 +63,6 @@ class App extends Component {
                     justify="center"
                     style={{minHeight: '100vh'}}
                   >
-
                     <Grid item xs={12}>
                       {/*<CircularProgress/>*/}
                       <img src="/logo.gif" alt="Loading Icon" width="100px" height="100px"/>

@@ -15,6 +15,10 @@ import FilterList from "@material-ui/icons/FilterList"
 import Remove from "@material-ui/icons/Remove"
 import Clear from "@material-ui/icons/Clear"
 
+const cellStyle = () => ({
+  padding: 4
+});
+
 class InstanceList2 extends Component {
   render() {
     const {instances, epochs} = this.props;
@@ -37,9 +41,11 @@ class InstanceList2 extends Component {
           ThirdStateCheck: Remove,
         }}
         columns={[
-          {title: 'ID', field: 'id'},
           {
-            title: 'Image', field: 'image',
+            title: 'ID', field: 'id', cellStyle
+          },
+          {
+            title: 'Image', field: 'image', cellStyle,
             customSort: (i1, i2) => clickedInstances.has(i2.id) - clickedInstances.has(i1.id) || 0,
             render: instance => <img className={`box-img ${activeInstances.has(instance.id) ? "active" : ""}`}
                                      src={instance.image}
@@ -63,8 +69,7 @@ class InstanceList2 extends Component {
                                      }}/>
           },
           {
-            title: 'Actual',
-            field: 'actual',
+            title: 'Actual', field: 'actual', cellStyle,
             lookup: raw_data.labels.reduce((map, label, i) => {
               map[i] = label;
               return map;
@@ -74,14 +79,14 @@ class InstanceList2 extends Component {
             }}>{getLabel(instance.actual)}</span>
           },
           {
-            title: 'Distribution',
+            title: 'Distribution', cellStyle,
             sorting: false,
             headerStyle: {width: '50%'},
             render: instance => <InstanceDistributionChart instance={instance} epochs={epochs}/>
           },
-          {title: 'Variability', field: 'classesVisitedNum', type: 'numeric'},
-          {title: 'Frequency', field: 'frequency', type: 'numeric'},
-          {title: 'Score', field: 'score', type: 'numeric'},
+          {title: 'Variability', field: 'classesVisitedNum', cellStyle, type: 'numeric'},
+          {title: 'Frequency', field: 'frequency', cellStyle, type: 'numeric'},
+          {title: 'Score', field: 'score', cellStyle, type: 'numeric'},
         ]}
         data={instances
           .filter(instance => instance.displayInList)
@@ -101,7 +106,10 @@ class InstanceList2 extends Component {
           pageSize: 50,
           pageSizeOptions: [10, 25, 50, 100, 200, 1000],
           rowStyle: rowData => ({
-            backgroundColor: (activeInstances.has(rowData.id)) ? "rgba(0, 0, 0, 0.04)" : ""
+            backgroundColor: (activeInstances.has(rowData.id)) ? "rgba(0, 0, 0, 0.04)" : "",
+          }),
+          headerStyle: ({
+            padding: 4
           })
         }}
       />

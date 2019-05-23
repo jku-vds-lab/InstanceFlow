@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "@welldone-software/why-did-you-render": "^3.0.6",
+    "lineupjsx": "^1.0.7",
     "material-table": "^1.34.0",
     "rc-slider": "^8.6.9",
     "react": "^16.8.3",

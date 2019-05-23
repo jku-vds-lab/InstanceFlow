@@ -1,7 +1,7 @@
 .box-img {
-    border: 3px solid transparent;
-    width: 36px;
-    height: 36px;
+    border: 1px solid transparent;
+    width: 24px;
+    height: 24px;
 }
 
 .box-img {
@@ -13,5 +13,5 @@
 }
 
 .box-img.active {
-    border: 3px solid gold;
+    border: 1px solid gold;
 }

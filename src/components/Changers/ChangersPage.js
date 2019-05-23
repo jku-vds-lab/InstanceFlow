@@ -15,7 +15,7 @@ class ChangersPage extends Component {
   }
 
   render() {
-    //console.log("MainPage");
+    //console.log("ChangersPage");
     const {epochs, loading, labelsWithOther, colors} = this.props.data;
 
     const infoDialogContent = <>

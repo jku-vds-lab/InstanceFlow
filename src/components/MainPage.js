@@ -18,9 +18,9 @@ class MainPage extends Component {
   }
 
   render() {
-    const {epochs, instances, loading, labelsWithOther, colors} = this.props.data;
+    const {raw_data, epochs, instances, loading, labelsWithOther, colors} = this.props.data;
 
-    const hasData = Boolean(instances) && instances.length !== 0 && Boolean(epochs);
+    const hasData = Boolean(raw_data) && Boolean(instances) && instances.length !== 0 && Boolean(epochs);
 
     const infoDialogContent = <>
       The following is a prototype showing instance classifications over a period of epochs.
@@ -38,7 +38,7 @@ class MainPage extends Component {
     return <div>
       <AppToolbar title="InstanceFlow" infoDialogTitle="Evolution of Instance Classification" infoDialogContent={infoDialogContent}/>
       <FlowDataProvider>
-        <Grid container alignItems="center">
+        <Grid container>
           <Grid item sm>
             <AllControls showEpochSelector={true}
                          showSortingSelector={true}

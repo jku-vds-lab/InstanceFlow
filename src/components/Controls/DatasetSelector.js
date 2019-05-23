@@ -1,98 +1,55 @@
-import React from "react";
-import Slider, {Range} from "rc-slider";
-import {withData} from "../DataProvider";
-import 'rc-slider/assets/index.css';
+import React, {useState} from "react";
 import FormControl from "@material-ui/core/FormControl/FormControl";
-import FormLabel from "@material-ui/core/FormLabel/FormLabel";
-import FormHelperText from "@material-ui/core/FormHelperText/FormHelperText";
-import {withStyles} from "@material-ui/core";
 import Select from "@material-ui/core/Select/Select";
 import InputLabel from "@material-ui/core/InputLabel/InputLabel";
-import Chip from "@material-ui/core/Chip/Chip";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 import Input from "@material-ui/core/Input/Input";
-
-const styles = theme => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  formControl: {
-    margin: theme.spacing.unit,
-    minWidth: 120,
-    maxWidth: 300,
-  },
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    margin: theme.spacing.unit / 4,
-  },
-  noLabel: {
-    marginTop: theme.spacing.unit * 3,
-  },
-});
-
-const names = [
-  'Dataset #2',
-  'Dataset #1',
-];
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+import {withData} from "../DataProvider";
 
 const DatasetSelector = (props) => {
-  const {classes} = props;
+  const {initializeData} = props.data;
 
-  const handleChange = event => {
-    //this.setState({name: event.target.value});
-  };
+  const metrics = ["none", "cifar10.json", "mnist.json"];
+  const metricLabels = ["None", "CIFAR10", "MNIST"];
 
-  const handleChangeMultiple = event => {
-    const {options} = event.target;
-    const value = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    //this.setState({
-    //  name: value,
-    //});
-  };
+  const [selectedDataset, setSelectedDataset] = useState(metrics[0]);
 
-  return <FormControl fullWidth className={classes.formControl}>
-    <InputLabel htmlFor="select-multiple-datasets">Datasets</InputLabel>
+  return <FormControl margin="dense" fullWidth>
+    <InputLabel shrink htmlFor="dataset-selector">
+      Sample Datasets
+    </InputLabel>
     <Select
-      multiple
-      value={[]}
-      onChange={handleChange}
-      input={<Input id="select-multiple-datasets"/>}
-      renderValue={selected => (
-        <div className={classes.chips}>
-          {selected.map(value => (
-            <Chip key={value} label={value} className={classes.chip}/>
-          ))}
-        </div>
-      )}
-      MenuProps={MenuProps}
+      value={selectedDataset}
+      onChange={e => {
+        const datasetName = e.target.value;
+        if (datasetName === "none") {
+          initializeData(null);
+        } else {
+          fetch(`datasets/${datasetName}`)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
+              }
+              return response.json();
+            })
+            .then(json => {
+              initializeData(json);
+            })
+            .catch(error => {
+              console.log(error);
+            })
+        }
+        setSelectedDataset(datasetName);
+      }}
+      input={<Input name="dataset" id="dataset-selector"/>}
+      name="datasetSelector"
     >
-      {names.map(name => (
-        <MenuItem key={name} value={name}>
-          {name}
-        </MenuItem>
-      ))}
+      {metrics.map((value, valueIndex) =>
+        <MenuItem key={valueIndex} value={value}>{metricLabels[valueIndex]}</MenuItem>
+      )}
     </Select>
+    {/*<FormHelperText></FormHelperText>*/}
   </FormControl>;
 };
 
-export default withStyles(styles, {withTheme: true})(withData(DatasetSelector));
+export default withData(DatasetSelector);

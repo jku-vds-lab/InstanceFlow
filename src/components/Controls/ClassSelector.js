@@ -12,6 +12,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 
 const ClassSelector = (props) => {
   const {labels, classes, setClasses, getColor} = props.data;
+  if(labels.length === 0) return null;
   return <FormControl fullWidth component="fieldset">
     <FormLabel component="legend">Classes to Display</FormLabel>
     <FormGroup row style={{marginLeft: "8px"}}>

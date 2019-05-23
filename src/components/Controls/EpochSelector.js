@@ -9,6 +9,7 @@ import FormHelperText from "@material-ui/core/FormHelperText/FormHelperText";
 const RangeWithTooltip = Slider.createSliderWithTooltip(Range);
 const EpochSelector = (props) => {
   const {to, setTo, from, setFrom, raw_data} = props.data;
+  if(!raw_data) return null;
   return <FormControl fullWidth component="fieldset">
     <FormLabel component="legend">Epoch Selector</FormLabel>
     <RangeWithTooltip min={0}

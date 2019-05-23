@@ -1,5 +1,4 @@
 import React, {useState, createContext, useEffect} from "react";
-import datasets from "../data/data.js";
 import ReactTooltip from "react-tooltip";
 
 const DataContext = createContext({});
@@ -17,7 +16,7 @@ const DataProvider = (props) => {
   const [classes, setClasses] = useState([3, 5]);
   const [from, setFrom] = useState(20);
   const [to, setTo] = useState(25);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [maxInstancesPerPredictionPerClass, setMaxInstancesPerPredictionPerClass] = useState(0);
   const [maxInstancesPerPrediction, setMaxInstancesPerPrediction] = useState(0);
   const [colors, setColors] = useState(["#ff0029", "#377eb8", "#66a61e", "#984ea3", "#00d2d5", "#ff7f00", "#af8d00", "#7f80cd", "#b3e900", "#c42e60", "lightgray"]);
@@ -29,7 +28,7 @@ const DataProvider = (props) => {
 
   useEffect(() => {
     //sleep(0).then(() => initializeData(datasets.CIFAR10));
-    initializeData(datasets.CIFAR10);
+    //initializeData(datasets.CIFAR10);
   }, []);
 
   useEffect(() => {
@@ -64,7 +63,11 @@ const DataProvider = (props) => {
   //}, [activeInstances]);
 
   const initializeData = (data) => {
-    setData(annotateInstanceData(data));
+    if(!data) {
+      setData(null);
+    } else {
+      setData(annotateInstanceData(data));
+    }
   };
 
   const sortInstances = (instances) => {
@@ -267,6 +270,7 @@ const DataProvider = (props) => {
   };
 
   const getClassesWithOther = () => {
+    if(!data) return [];
     if (classes.length === data.labels.length) return classes;
     const newClasses = [...classes];
     newClasses.splice(parseInt(classes.length / 2), 0, 10);
