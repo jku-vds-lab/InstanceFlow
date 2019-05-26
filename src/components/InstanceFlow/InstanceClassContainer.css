@@ -4,13 +4,16 @@
     padding: 3px 0;
     display: flex;
     min-height: 100px;
-    min-width: 75px;
     box-sizing: border-box;
     width: 100%;
     width: -moz-available;
     width: -webkit-fill-available;
     width: stretch;
     z-index: 10;
+}
+
+.dense .instance-class-container {
+    width: 5px;
 }
 
 .instance-class-bar {

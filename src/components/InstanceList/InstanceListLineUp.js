@@ -36,7 +36,7 @@ class InstanceListLineUp extends Component {
         })
       }));
 
-    return <div>
+    return <div style={{fontSize: "10pt"}}>
       <Button color="default" variant="contained" onClick={() => {
         const data = this.taggle.adapter.data;
         const ranking = data.getRankings()[0];

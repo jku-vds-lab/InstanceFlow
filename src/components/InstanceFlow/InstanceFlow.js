@@ -8,20 +8,21 @@ import {withFlowData} from "./FlowDataProvider";
 class InstanceFlow extends Component {
   render() {
     const {getClassesWithOther} = this.props.data;
-    const {epochs, instances : allInstances} = this.props;
+    const {epochs, instances: allInstances} = this.props;
+    const {classView} = this.props.flowData;
 
     const instances = allInstances.filter(instance => instance.displayInFlow);
 
     const classesWithOther = getClassesWithOther();
     return <div className="overflow-container">
-      <div className="instance-flow-container" style={{
+      <div className={"instance-flow-container" + (classView === "dense" ? " dense" : "")} style={{
         gridTemplateColumns: `repeat(${epochs.length}, 1fr)`,
         gridTemplateRows: `repeat(${classesWithOther.length}, 1fr)`
       }}>
         {epochs.map(epoch =>
           <InstanceEpochContainer key={epoch.id} instances={instances} classes={classesWithOther} epoch={epoch}/>
         )}
-        <InstanceFlowSVG instances={instances} epochs={epochs} />
+        <InstanceFlowSVG instances={instances} epochs={epochs}/>
       </div>
     </div>;
   }

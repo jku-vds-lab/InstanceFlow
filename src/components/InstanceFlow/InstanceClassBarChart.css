@@ -3,6 +3,7 @@
     flex: 1;
     flex-direction: column;
     justify-content: flex-end;
+    min-width: 75px;
 }
 
 .instance-class-container .bar-chart-container {

@@ -9,8 +9,8 @@ import MenuItem from "@material-ui/core/MenuItem/MenuItem";
 const ClassViewSelector = (props) => {
   const {classView, setClassView} = props.flowData;
 
-  const views = ["overview", "instances"];
-  const viewLabels = ["Overview", "Instance View"];
+  const views = ["overview", "instances", "dense"];
+  const viewLabels = ["Overview", "Instance View", "Dense"];
 
   return <FormControl fullWidth margin="dense">
     <InputLabel shrink htmlFor="class-view-selector">
