@@ -1,0 +1,11 @@
+.lu [data-renderer=distribution] {
+    display: flex;
+    flex-direction: row;
+    align-content: stretch;
+    align-items: stretch;
+}
+
+.lu [data-renderer=distribution] div {
+    flex: 1 1 auto;
+    position: relative;
+}

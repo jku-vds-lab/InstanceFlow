@@ -13,7 +13,8 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "^2.1.8",
     "react-tooltip": "^3.10.0",
-    "react-window": "^1.7.2"
+    "react-window": "^1.7.2",
+    "typescript": "^3.4.5"
   },
   "scripts": {
     "start": "react-scripts start",
