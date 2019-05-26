@@ -40,7 +40,7 @@ class SVGBasicSankey extends Component {
       fill={color}
       stroke="none"
       onMouseOver={e => {
-        activateInstances(undefined, ...instances)
+        activateInstances({active: true}, ...instances)
       }}
       onMouseOut={e => {
         deactivateInstances(false, ...instances);

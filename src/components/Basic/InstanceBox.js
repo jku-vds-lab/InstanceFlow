@@ -5,12 +5,14 @@ import {withFlowData} from "../InstanceFlow/FlowDataProvider";
 
 class InstanceBox extends Component {
   shouldComponentUpdate(nextProps, nextState, nextContext) {
-    return this.props.instance !== nextProps.instance ||
-      this.props.data.activeInstances.has(this.props.instance.id) !== nextProps.data.activeInstances.has(nextProps.instance.id) ||
-      this.props.data.clickedInstances.has(this.props.instance.id) !== nextProps.data.clickedInstances.has(nextProps.instance.id) ||
-      this.props.classification !== nextProps.classification ||
-      this.props.flowData.opacityMetric !== nextProps.flowData.opacityMetric ||
-      this.props.flowData.sortMetric !== nextProps.flowData.sortMetric;
+    return true;
+    //return this.props.instance !== nextProps.instance ||
+    //  this.props.instance.active !== nextProps.instance.active ||
+    //  this.props.instance.line !== nextProps.instance.line ||
+    //  this.props.instance.clicked !== nextProps.instance.clicked ||
+    //  this.props.classification !== nextProps.classification ||
+    //  this.props.flowData.opacityMetric !== nextProps.flowData.opacityMetric ||
+    //  this.props.flowData.sortMetric !== nextProps.flowData.sortMetric;
   }
 
   refCallback = element => {
@@ -25,11 +27,10 @@ class InstanceBox extends Component {
 
   render() {
     const {instance, classification, style} = this.props;
-    const {getColor, getLabel, activeInstances, clickedInstances, activateInstances, deactivateInstances} = this.props.data;
+    const {getColor, getLabel, deactivateInstances, activateInstances} = this.props.data;
     const {opacityMetric} = this.props.flowData;
 
-    const active = activeInstances.has(instance.id);
-    const clicked = clickedInstances.has(instance.id);
+    const {active, clicked} = instance;
 
     if (!instance) return null;
     return <SimpleBox type={classification.type}
@@ -41,7 +42,7 @@ class InstanceBox extends Component {
                       refCallback={this.refCallback}
                       onMouseOver={e => {
                         if (!clicked)
-                          activateInstances({lines: true}, instance)
+                          activateInstances({active: true, lines: true}, instance)
                       }}
                       onMouseOut={e => {
                         if (!clicked)
@@ -49,9 +50,9 @@ class InstanceBox extends Component {
                       }}
                       onClick={e => {
                         if (!clicked) {
-                          activateInstances({clicked: true, lines: true}, instance);
+                          activateInstances({active: true, clicked: true, lines: true}, instance);
                         } else {
-                          activateInstances({clicked: false, lines: false}, instance);
+                          activateInstances({active: false, clicked: false, lines: false}, instance);
                         }
                       }}
     />;

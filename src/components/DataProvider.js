@@ -10,6 +10,7 @@ const DataProvider = (props) => {
   const [epochs, setEpochs] = useState([]);
   const [instances, setInstances] = useState([]);
   const [instanceFilter, setInstanceFilter] = useState("incorrect");
+  const [visibleInstances, setVisibleInstances] = useState(new Set());
   const [activeInstances, setActiveInstances] = useState(new Set());
   const [lineInstances, setLineInstances] = useState(new Set());
   const [clickedInstances, setClickedInstances] = useState(new Set());
@@ -45,9 +46,13 @@ const DataProvider = (props) => {
   }, []);
 
   useEffect(() => {
-    setLoading(true);
+    if(data) {
+      setEpochs(prepareEpochs(data, classes, from, to, visibleInstances));
+    }
+  }, [data, classes, from, to, visibleInstances]);
+
+  useEffect(() => {
     if (data) {
-      setEpochs(prepareEpochs(data, classes, activeInstances, lineInstances));
       setInstances(
         sortInstances(
           data.instances
@@ -55,9 +60,16 @@ const DataProvider = (props) => {
               instance.index = index;
               return instance;
             })
-            .filter(instance => instance.display)));
+            .filter(instance => instance.display)
+            .map(instance => {
+              instance.visible = visibleInstances.has(instance.id);
+              instance.active = activeInstances.has(instance.id);
+              instance.line = lineInstances.has(instance.id);
+              instance.clicked = clickedInstances.has(instance.id);
+              return instance;
+            })));
     }
-  }, [data, from, to, classes, instanceFilter, sortMetric]);
+  }, [epochs, instanceFilter, sortMetric, activeInstances, clickedInstances, lineInstances]);
 
   useEffect(() => {
     setLoading(false);
@@ -140,13 +152,13 @@ const DataProvider = (props) => {
     return data;
   };
 
-  const prepareEpochs = (data, classes, activeInstances, lineInstances) => {
+  const prepareEpochs = (data, classes, from, to, visibleInstances) => {
     // Select the epochs
     const slicedEpochs = data.epochs.slice(from, to + 1);
 
     // Update meta information of instances with selected epochs
-    prepareInstanceMeta(data, activeInstances, lineInstances);
-    annotateInstanceMeta(data, slicedEpochs);
+    prepareInstanceMeta(data);
+    annotateInstanceMeta(data, slicedEpochs, visibleInstances);
     // Prepare epoch meta array
     prepareEpochMeta(classes, slicedEpochs);
     annotateEpochMeta(slicedEpochs);
@@ -157,13 +169,10 @@ const DataProvider = (props) => {
     data.instances.forEach(instance => {
       instance.score = 0;
       instance.display = false;
-      //instance.active = activeInstances.has(instance.id);
-      //instance.lines = lineInstances.has(instance.id);
-      //instance.clicked = clickedInstances.has(instance.id);
     });
   };
 
-  const annotateInstanceMeta = (data, epochs) => {
+  const annotateInstanceMeta = (data, epochs, visibleInstances) => {
     data.instances.forEach((instance, iIndex) => {
       let wrong = 0, jumps = 0;
       let classesVisited = new Set();
@@ -189,7 +198,7 @@ const DataProvider = (props) => {
         instance.displayInFlow = wrong > 0 && classes.includes(instance.actual);
         instance.displayInList = instance.displayInFlow;
       } else if (instanceFilter === "active") {
-        instance.displayInFlow = clickedInstances.has(instance.id) && classes.includes(instance.actual);
+        instance.displayInFlow = visibleInstances.has(instance.id) && classes.includes(instance.actual);
         instance.displayInList = wrong > 0 && classes.includes(instance.actual);
       } else if (instanceFilter === "all") {
         instance.displayInFlow = classes.includes(instance.actual);
@@ -309,6 +318,7 @@ const DataProvider = (props) => {
       to, setTo,
       from, setFrom,
       classes, setClasses,
+      visibleInstances, setVisibleInstances,
       activeInstances,
       clickedInstances,
       lineInstances,
@@ -323,11 +333,20 @@ const DataProvider = (props) => {
         } : i));
       },
       activateInstances: (config = {}, ...instances) => {
-        setActiveInstances(activeInstances => {
-          const res = new Set(activeInstances);
-          instances.forEach(instance => res.add(instance.id));
-          return res;
-        });
+        if(config.visible !== undefined) {
+          setVisibleInstances(visibleInstances => {
+            const res = new Set(visibleInstances);
+            instances.forEach(instance => config.visible ? res.add(instance.id) : res.delete(instance.id));
+            return res;
+          });
+        }
+        if(config.active !== undefined) {
+          setActiveInstances(activeInstances => {
+            const res = new Set(activeInstances);
+            instances.forEach(instance => config.active ? res.add(instance.id) : res.delete(instance.id));
+            return res;
+          });
+        }
         if (config.lines !== undefined)
           setLineInstances(lineInstances => {
             const res = new Set(lineInstances);
@@ -343,6 +362,7 @@ const DataProvider = (props) => {
         //setInstances(sortInstances(instances));
       },
       deactivateAllInstances: () => {
+        //setVisibleInstances(new Set());
         setActiveInstances(new Set());
         setLineInstances(new Set());
         setClickedInstances(new Set());
@@ -350,8 +370,14 @@ const DataProvider = (props) => {
       deactivateInstances: (force = false, ...instances) => {
         const nonClickedInstances = instances
           .filter(instance => {
-            return !clickedInstances.has(instance.id) || force
+            return !instance.clicked || force
           });
+        //setVisibleInstances(visibleInstances => {
+        //  const res = new Set(visibleInstances);
+        //  nonClickedInstances
+        //    .forEach(instance => res.delete(instance.id));
+        //  return res;
+        //});
         setActiveInstances(activeInstances => {
           const res = new Set(activeInstances);
           nonClickedInstances

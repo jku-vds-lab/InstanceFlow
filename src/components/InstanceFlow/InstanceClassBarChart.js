@@ -1,8 +1,8 @@
-import React, {PureComponent} from "react";
+import React, {Component, PureComponent} from "react";
 import {withData} from "../DataProvider";
 import "./InstanceClassBarChart.css"
 
-class InstanceClassBarChart extends PureComponent {
+class InstanceClassBarChart extends Component {
   render() {
     const {stats, classes} = this.props;
     const {getLabel, getColor, maxInstancesPerPredictionPerClass} = this.props.data;

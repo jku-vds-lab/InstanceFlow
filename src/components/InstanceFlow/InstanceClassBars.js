@@ -1,9 +1,9 @@
-import React, {PureComponent} from "react";
+import React, {Component, PureComponent} from "react";
 import {withData} from "../DataProvider";
 import InstanceBox from "../Basic/InstanceBox";
 import "./InstanceClassBars.css";
 
-class InstanceClassBars extends PureComponent {
+class InstanceClassBars extends Component {
   render() {
     const {instances, epoch, clazz} = this.props;
     return <div className="instance-class-bars">

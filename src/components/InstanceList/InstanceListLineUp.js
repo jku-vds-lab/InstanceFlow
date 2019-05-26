@@ -1,21 +1,26 @@
 import React, {Component} from "react";
-import "./InstanceList.css"
-import {withFlowData} from "../InstanceFlow/FlowDataProvider";
 import {withData} from "../DataProvider";
 import {
+  LineUp,
   LineUpCategoricalColumnDesc,
   LineUpNumberColumnDesc,
   LineUpStringColumnDesc, Taggle
 } from "lineupjsx";
+import Button from "@material-ui/core/Button/Button";
 
 class InstanceListLineUp extends Component {
   state = {
     selection: []
   };
 
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    return this.props.instances.length !== nextProps.instances.length ||
+      this.props.epochs.length !== nextProps.epochs.length;
+  }
+
   render() {
     const {instances, epochs} = this.props;
-    const {raw_data, classes, labels, activeInstances, deactivateAllInstances, activateInstances, clickedInstances, getLabel} = this.props.data;
+    const {classes, labels, activeInstances, deactivateAllInstances, activateInstances, setVisibleInstances, getLabel} = this.props.data;
 
     const data = instances
       .filter(instance => instance.displayInList)
@@ -32,13 +37,22 @@ class InstanceListLineUp extends Component {
       }));
 
     return <div>
-      <Taggle data={data} style={{height: '100vh'}}
+      <Button color="default" variant="contained" onClick={() => {
+        const data = this.taggle.adapter.data;
+        const ranking = data.getRankings()[0];
+        const visibleInstances = data.viewRawRows(ranking.getOrder()).map(row => row.v);
+        console.log(visibleInstances);
+        setVisibleInstances(new Set());
+        activateInstances({visible: true}, ...visibleInstances);
+      }}>Update Above View</Button>
+      <Taggle data={data} ref={e => this.taggle = e} style={{height: '100vh'}}
+        //selection={Array.from(activeInstances).map(id => data.find(instance => instance.id === id).index)}
               selection={this.state.selection}
               onSelectionChanged={indices => {
                 this.setState({selection: indices});
                 const instances = indices.map(index => data[index]);
                 deactivateAllInstances();
-                activateInstances({}, ...instances);
+                activateInstances({active: true, clicked: true, lines: true}, ...instances);
               }}>
         <LineUpStringColumnDesc column="id" label="ID" width={100}/>
         <LineUpStringColumnDesc column="image" renderer="image" pattern="${escapedValue}" width={50}/>
