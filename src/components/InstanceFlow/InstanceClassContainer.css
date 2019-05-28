@@ -1,9 +1,9 @@
 .instance-class-container {
-    border-top: 5px dashed;
-    border-bottom: 5px dashed;
+    border-top: 2px solid;
+    border-bottom: 2px solid;
     padding: 3px 0;
     display: flex;
-    min-height: 100px;
+    min-height: 70px;
     box-sizing: border-box;
     width: 100%;
     width: -moz-available;

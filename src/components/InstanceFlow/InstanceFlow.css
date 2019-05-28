@@ -7,6 +7,14 @@
     padding: 0 40px;
 }
 
+.instance-flow-container .class-label {
+    width: 90px;
+    align-self: center;
+    text-align: right;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 .instance-flow-container.dense {
     grid-column-gap: 50px;
 }
