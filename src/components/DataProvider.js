@@ -47,6 +47,7 @@ const DataProvider = (props) => {
 
   useEffect(() => {
     if(data) {
+      // TODO: Adjust colors, from, to etc to input data for fail-save operation.
       setEpochs(prepareEpochs(data, classes, from, to, visibleInstances));
     }
   }, [data, classes, from, to, visibleInstances]);

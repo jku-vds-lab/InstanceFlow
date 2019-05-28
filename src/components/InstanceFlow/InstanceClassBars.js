@@ -1,4 +1,4 @@
-import React, {Component, PureComponent} from "react";
+import React, {Component} from "react";
 import {withData} from "../DataProvider";
 import InstanceBox from "../Basic/InstanceBox";
 import "./InstanceClassBars.css";

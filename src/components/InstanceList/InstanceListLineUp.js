@@ -5,7 +5,6 @@ import {
   LineUpNumberColumnDesc,
   LineUpStringColumnDesc, Taggle,
 } from "lineupjsx";
-import Button from "@material-ui/core/Button/Button";
 import CategoricalArrayHeatmapCellRenderer from "./CategoricalArrayHeatmapCellRenderer";
 
 class InstanceListLineUp extends Component {
@@ -25,7 +24,7 @@ class InstanceListLineUp extends Component {
       this.taggle.adapter.data.on("orderChanged", () => {
         const data = this.taggle.adapter.data;
         const ranking = data.getRankings()[0];
-        const visibleInstances = data.viewRawRows(ranking.getOrder()).map(row => row.v);
+        const visibleInstances = data.view(ranking.getOrder());
         setVisibleInstances(new Set());
         activateInstances({visible: true}, ...visibleInstances);
       });
@@ -34,7 +33,7 @@ class InstanceListLineUp extends Component {
 
   render() {
     const {instances, epochs} = this.props;
-    const {classes, labels, activeInstances, deactivateAllInstances, activateInstances, setVisibleInstances, getLabel} = this.props.data;
+    const {classes, labels, deactivateAllInstances, activateInstances, getLabel, getColor} = this.props.data;
 
     const data = instances
       .filter(instance => instance.displayInList)
@@ -52,6 +51,14 @@ class InstanceListLineUp extends Component {
         })
       }));
 
+    const labelCategories = labels.map((label, i) => {
+      return {
+        name: label,
+        label: label,
+        color: getColor(i)
+      }
+    });
+
     return <div style={{fontSize: "10pt"}}>
       <Taggle data={data}
               renderers={{distribution: new CategoricalArrayHeatmapCellRenderer()}}
@@ -65,15 +72,15 @@ class InstanceListLineUp extends Component {
                 deactivateAllInstances();
                 activateInstances({active: true, clicked: true, lines: true}, ...instances);
               }}>
-        <LineUpStringColumnDesc column="id" label="ID" width={100} ref={e => this.idColumn = e}/>
+        <LineUpStringColumnDesc column="id" label="ID" width={100}/>
         <LineUpStringColumnDesc column="image" renderer="image" groupRenderer="image" summaryRenderer="image"
                                 pattern="${escapedValue}" width={50}/>
-        <LineUpCategoricalColumnDesc column="label" categories={labels}/>
+        <LineUpCategoricalColumnDesc column="label" categories={labelCategories}/>
         <LineUpNumberColumnDesc column="distribution" label="Trinary Distribution" asArray={epochs.length}
                                 domain={[0, 2]}
                                 width={250}/>
         <LineUpCategoricalColumnDesc column="distribution2" label="Prediction Distribution" renderer="distribution"
-                                     asArray={epochs.length} categories={labels}
+                                     asArray={epochs.length} categories={labelCategories}
                                      width={250} color="red"/>
         <LineUpNumberColumnDesc column="classesVisitedNum" domain={[0, 1]} label="Variability"/>
         <LineUpNumberColumnDesc column="frequency" domain={[0, 1]} label="Frequency"/>

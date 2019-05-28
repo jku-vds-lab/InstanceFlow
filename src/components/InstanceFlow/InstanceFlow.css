@@ -14,6 +14,9 @@
     text-overflow: ellipsis;
     overflow: hidden;
 }
+.instance-flow-container.dense .class-label {
+    width: 50px;
+}
 
 .instance-flow-container.dense {
     grid-column-gap: 50px;

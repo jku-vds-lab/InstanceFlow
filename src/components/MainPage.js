@@ -17,7 +17,7 @@ class MainPage extends Component {
   }
 
   render() {
-    const {raw_data, epochs, instances, loading, labelsWithOther, colors} = this.props.data;
+    const {raw_data, epochs, instances, labelsWithOther, colors} = this.props.data;
 
     const hasData = Boolean(raw_data) && Boolean(instances) && instances.length !== 0 && Boolean(epochs);
 

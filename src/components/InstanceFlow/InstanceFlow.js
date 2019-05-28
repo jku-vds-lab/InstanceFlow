@@ -20,7 +20,7 @@ class InstanceFlow extends Component {
         gridTemplateRows: `repeat(${classesWithOther.length}, 1fr)`
       }}>
         {classesWithOther.map((clazz, i) =>
-          <span style={{
+          <span key={clazz} style={{
             order: i
           }} className="class-label">{getLabel(clazz)}</span>
         )}
