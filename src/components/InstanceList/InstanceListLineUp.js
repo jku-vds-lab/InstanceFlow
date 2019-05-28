@@ -17,7 +17,16 @@ class InstanceListLineUp extends Component {
       this.props.epochs.length !== nextProps.epochs.length;
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // TODO: Listeners to "old" reference of Taggle are still there..
+    this.initializeTaggleEvents();
+  }
+
   componentDidMount() {
+    this.initializeTaggleEvents();
+  }
+
+  initializeTaggleEvents = () => {
     if (this.taggle) {
       const {activateInstances, setVisibleInstances} = this.props.data;
       // This callback serves as indicator that a filter has changed (TODO: Better callback possible?)
@@ -29,7 +38,7 @@ class InstanceListLineUp extends Component {
         activateInstances({visible: true}, ...visibleInstances);
       });
     }
-  }
+  };
 
   render() {
     const {instances, epochs} = this.props;
