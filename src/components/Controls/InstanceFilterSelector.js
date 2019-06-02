@@ -10,7 +10,7 @@ const InstanceFilterSelector = (props) => {
   const {instanceFilter, setInstanceFilter} = props.data;
 
   const metrics = ["incorrect", "active", "all"];
-  const metricLabels = ["Only Incorrect", "Active Instances", "All Instances"];
+  const metricLabels = ["Only Incorrect", "Visible in LineUp", "All Instances"];
 
   return <FormControl margin="dense" fullWidth>
     <InputLabel shrink htmlFor="instance-filter-selector">

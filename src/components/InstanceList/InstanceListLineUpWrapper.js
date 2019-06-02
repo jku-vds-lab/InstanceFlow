@@ -6,13 +6,16 @@ class InstanceListLineUpWrapper extends Component {
   data = [];
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
-    return this.props.instances.length !== nextProps.instances.length ||
+    // TODO: What if dataset changes?
+    return this.props.data.raw_data.name !== nextProps.data.raw_data.name ||
+      (this.props.instances.length > 0 && nextProps.instances.length > 0)
+      && (JSON.stringify(this.props.instances[0]) !== JSON.stringify(nextProps.instances[0])) ||
       this.props.epochs.length !== nextProps.epochs.length ||
       this.props.data.clickedInstances !== nextProps.data.clickedInstances;
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if(this.taggle) {
+    if (this.taggle) {
       const {clickedInstances} = this.props.data;
 
       if (clickedInstances !== prevProps.data.clickedInstances) {
@@ -35,7 +38,7 @@ class InstanceListLineUpWrapper extends Component {
     const {classes, getLabel} = this.props.data;
 
     this.data = instances
-      .filter(instance => instance.displayInList)
+    //.filter(instance => instance.displayInList)
       .map((instance, i) => ({
         ...instance, taggleIndex: i, label: getLabel(instance.actual), distribution: epochs.map(epoch => {
           // 0 if correct
@@ -57,9 +60,10 @@ class InstanceListLineUpWrapper extends Component {
 
   render() {
     const {instances, epochs} = this.props;
+    const {raw_data} = this.props.data;
 
     return <div style={{fontSize: "10pt"}}>
-      <InstanceListLineUp instances={instances} epochs={epochs} innerRef={(e) => this.taggle = e}/>
+      <InstanceListLineUp key={raw_data.name} instances={instances} epochs={epochs} innerRef={(e) => this.taggle = e}/>
     </div>;
   }
 }

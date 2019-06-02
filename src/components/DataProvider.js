@@ -9,7 +9,7 @@ const DataProvider = (props) => {
   const [data, setData] = useState(null);
   const [epochs, setEpochs] = useState([]);
   const [instances, setInstances] = useState([]);
-  const [instanceFilter, setInstanceFilter] = useState("incorrect");
+  const [instanceFilter, setInstanceFilter] = useState("active");
   const [visibleInstances, setVisibleInstances] = useState(new Set());
   const [activeInstances, setActiveInstances] = useState(new Set());
   const [lineInstances, setLineInstances] = useState(new Set());
@@ -61,7 +61,7 @@ const DataProvider = (props) => {
               instance.index = index;
               return instance;
             })
-            .filter(instance => instance.display)
+            //.filter(instance => instance.display)
             .map(instance => {
               instance.visible = visibleInstances.has(instance.id);
               instance.active = activeInstances.has(instance.id);
