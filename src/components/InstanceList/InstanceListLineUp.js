@@ -8,18 +8,8 @@ import {
 import CategoricalArrayHeatmapCellRenderer from "./CategoricalArrayHeatmapCellRenderer";
 
 class InstanceListLineUp extends Component {
-  state = {
-    selection: []
-  };
-
   shouldComponentUpdate(nextProps, nextState, nextContext) {
-    return this.props.instances.length !== nextProps.instances.length ||
-      this.props.epochs.length !== nextProps.epochs.length;
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    // TODO: Listeners to "old" reference of Taggle are still there..
-    this.initializeTaggleEvents();
+    return false;
   }
 
   componentDidMount() {
@@ -41,24 +31,8 @@ class InstanceListLineUp extends Component {
   };
 
   render() {
-    const {instances, epochs} = this.props;
-    const {classes, labels, deactivateAllInstances, activateInstances, getLabel, getColor} = this.props.data;
-
-    const data = instances
-      .filter(instance => instance.displayInList)
-      .map(instance => ({
-        ...instance, label: getLabel(instance.actual), distribution: epochs.map(epoch => {
-          // 0 if correct
-          // 1 if other
-          // 2 if incorrect (wrong and within selected classes)
-          const prediction = epoch.classifications[instance.index].predicted;
-          if (instance.actual === prediction) return 0;
-          if (classes.includes(prediction)) return 2;
-          return 1;
-        }), distribution2: epochs.map(epoch => {
-          return getLabel(epoch.classifications[instance.index].predicted);
-        })
-      }));
+    const {epochs, innerRef} = this.props;
+    const {labels, deactivateAllInstances, activateInstances, getColor} = this.props.data;
 
     const labelCategories = labels.map((label, i) => {
       return {
@@ -68,16 +42,14 @@ class InstanceListLineUp extends Component {
       }
     });
 
-    return <div style={{fontSize: "10pt"}}>
-      <Taggle data={data}
-              renderers={{distribution: new CategoricalArrayHeatmapCellRenderer()}}
-              ref={e => this.taggle = e}
+    return <Taggle data={[]} renderers={{distribution: new CategoricalArrayHeatmapCellRenderer()}}
+              ref={e => {
+                this.taggle = e;
+                innerRef(this.taggle);
+              }}
               style={{height: '100vh'}}
-        //selection={Array.from(activeInstances).map(id => data.find(instance => instance.id === id).index)}
-              selection={this.state.selection}
               onSelectionChanged={indices => {
-                this.setState({selection: indices});
-                const instances = indices.map(index => data[index]);
+                const instances = indices.map(index => this.taggle.adapter.data.data[index]);
                 deactivateAllInstances();
                 activateInstances({active: true, clicked: true, lines: true}, ...instances);
               }}>
@@ -94,8 +66,7 @@ class InstanceListLineUp extends Component {
         <LineUpNumberColumnDesc column="classesVisitedNum" domain={[0, 1]} label="Variability"/>
         <LineUpNumberColumnDesc column="frequency" domain={[0, 1]} label="Frequency"/>
         <LineUpNumberColumnDesc column="score" domain={[0, 1]} label="Score"/>
-      </Taggle>
-    </div>;
+      </Taggle>;
   }
 }
 

@@ -27,9 +27,12 @@ const ClassSelector = (props) => {
                                                   fontSize="small"/>}
                   checkedIcon={<CheckBoxIcon nativeColor={getColor(labelIndex)} style={{padding: 0}} fontSize="small"/>}
                   checked={classes.includes(labelIndex)}
-                  onChange={e => !e.target.checked ?
-                    setClasses(classes => classes.filter(clazz => clazz !== parseInt(e.target.value))) :
-                    setClasses(classes => [...classes, parseInt(e.target.value)].sort())}
+                  onChange={e => {
+                    e.persist();
+                    return !e.target.checked ?
+                      setClasses(classes => classes.filter(clazz => clazz !== parseInt(e.target.value))) :
+                      setClasses(classes => [...classes, parseInt(e.target.value)].sort());
+                  }}
                   value={labelIndex.toString()}/>
               }
               label={label}
