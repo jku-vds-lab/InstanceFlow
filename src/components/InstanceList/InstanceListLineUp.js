@@ -83,7 +83,7 @@ class InstanceListLineUp extends Component {
   render() {
     const {allEpochs, innerRef} = this.props;
     const {labels, deactivateAllInstances, activateInstances} = this.props.data;
-    return <Taggle data={[]} renderers={{categoricalHeatmap: new CategoricalArrayHeatmapCellRenderer()}}
+    return <Taggle data={[]} renderers={{catarrheatmap: new CategoricalArrayHeatmapCellRenderer()}}
                    ref={e => {
                      this.taggle = e;
                      innerRef(this.taggle);
@@ -100,16 +100,19 @@ class InstanceListLineUp extends Component {
       <LineUpCategoricalColumnDesc column="label" categories={labels}/>
       <LineUpNumberColumnDesc column="distribution" label="Trinary Distribution"
                               asArray={allEpochs.length}
+                              groupRenderer="histogram"
                               domain={[0, 1]}
                               width={200}/>
       <LineUpCategoricalColumnDesc column="distribution2" label="Prediction Distribution"
-                                   renderer="categoricalHeatmap"
+                                   renderer="catarrheatmap"
+                                   groupRenderer="catheatmap"
                                    asArray={allEpochs.length}
                                    categories={labels}
                                    width={200}/>
       <LineUpCategoricalColumnDesc column="visitedLabels"
                                    label="Visited Classes"
                                    renderer="catheatmap"
+                                   groupRenderer="catheatmap"
                                    asSet={true}
                                    categories={labels}/>
       <LineUpNumberColumnDesc column="variability"

@@ -6,10 +6,9 @@ class InstanceListLineUpWrapper extends Component {
   data = [];
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
-    // TODO: What if dataset changes?
     return this.props.data.raw_data.name !== nextProps.data.raw_data.name ||
-      (this.props.instances.length > 0 && nextProps.instances.length > 0)
-      && (JSON.stringify(this.props.instances[0]) !== JSON.stringify(nextProps.instances[0])) ||
+      ((this.props.instances.length > 0 && nextProps.instances.length > 0)
+      && (JSON.stringify(this.props.instances[0]) !== JSON.stringify(nextProps.instances[0]))) ||
       this.props.epochs.length !== nextProps.epochs.length ||
       this.props.data.clickedInstances !== nextProps.data.clickedInstances;
   }
