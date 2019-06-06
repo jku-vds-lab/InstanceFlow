@@ -36,7 +36,7 @@ const AllControls = (props) => {
         {showSankeyEnableCheckbox && <Grid xs={12} sm={6} md={3} lg={2} item><SankeyEnableCheckbox/></Grid>}
       </Grid>
     </FormControl>
-    {false && showClassSelector && <ClassSelector className="input-element"/>}
+    {showClassSelector && <ClassSelector className="input-element"/>}
     {showEpochSelector && <EpochSelector/>}
   </div>;
 };

@@ -6,6 +6,7 @@ import {
   LineUpStringColumnDesc, Taggle,
 } from "lineupjsx";
 import CategoricalArrayHeatmapCellRenderer from "./CategoricalArrayHeatmapCellRenderer";
+import {ScaleMappingFunction} from "lineupjs";
 
 class InstanceListLineUp extends Component {
   shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -16,24 +17,48 @@ class InstanceListLineUp extends Component {
     this.initializeTaggleEvents();
   }
 
+  updateData(data, from, to) {
+    const distribution2Column = this.taggle.adapter.data.find((d) => d.desc.column === "distribution2");
+    const distributionColumn = this.taggle.adapter.data.find((d) => d.desc.column === "distribution");
+    const count = to - from + 1;
+    const splicer = {
+      length: count,
+      splice: v => v.slice(from, to + 1)
+    };
+    distribution2Column.setSplicer(splicer);
+    distributionColumn.setSplicer(splicer);
+
+
+    const scoreColumn = this.taggle.adapter.data.find((d) => d.desc.type === 'number' && d.desc.column === "scoreRaw");
+    if (scoreColumn) {
+      scoreColumn.setMapping(new ScaleMappingFunction([0, count], 'linear'));
+    }
+
+    const frequencyColumn = this.taggle.adapter.data.find((d) => d.desc.type === 'number' && d.desc.column === "frequencyRaw");
+    if (frequencyColumn) {
+      frequencyColumn.setMapping(new ScaleMappingFunction([0, count - 1], 'linear'));
+    }
+    this.taggle.adapter.data.setData(data);
+  }
+
   initializeTaggleEvents = () => {
     if (this.taggle) {
-      const {labels, activateInstances, setVisibleInstances, setClasses, setColors} = this.props.data;
+      const {labels, classes, activateInstances, setVisibleInstances, setClasses, setColors, getLabel} = this.props.data;
 
       const labelColumn = this.taggle.adapter.data.find((d) => d.desc.type === 'categorical' && d.desc.column === "label");
       if (labelColumn) {
         setColors([...Array.from(labelColumn.lookup, ([key, value]) => value.color), "lightgray"]);
         labelColumn.setFilter({
           filterMissing: true,
-          filter: ["Cat", "Dog"]
+          filter: classes.map(c => getLabel(c))
         });
       }
-      const scoreColumn = this.taggle.adapter.data.find((d) => d.desc.type === 'number' && d.desc.column === "score");
+      const scoreColumn = this.taggle.adapter.data.find((d) => d.desc.type === 'number' && d.desc.column === "scoreRaw");
       if (scoreColumn) {
         scoreColumn.setFilter({
           filterMissing: false,
           max: Infinity,
-          min: 0.01
+          min: 1
         });
       }
 
@@ -56,10 +81,9 @@ class InstanceListLineUp extends Component {
   };
 
   render() {
-    const {epochs, innerRef} = this.props;
+    const {allEpochs, innerRef} = this.props;
     const {labels, deactivateAllInstances, activateInstances} = this.props.data;
-
-    return <Taggle data={[]} renderers={{distribution: new CategoricalArrayHeatmapCellRenderer()}}
+    return <Taggle data={[]} renderers={{categoricalHeatmap: new CategoricalArrayHeatmapCellRenderer()}}
                    ref={e => {
                      this.taggle = e;
                      innerRef(this.taggle);
@@ -74,15 +98,32 @@ class InstanceListLineUp extends Component {
       <LineUpStringColumnDesc column="image" renderer="image" groupRenderer="image" summaryRenderer="image"
                               pattern="${escapedValue}" width={50}/>
       <LineUpCategoricalColumnDesc column="label" categories={labels}/>
-      <LineUpNumberColumnDesc column="distribution" label="Trinary Distribution" asArray={epochs.length}
-                              domain={[0, 2]}
-                              width={250}/>
-      <LineUpCategoricalColumnDesc column="distribution2" label="Prediction Distribution" renderer="distribution"
-                                   asArray={epochs.length} categories={labels}
-                                   width={250} color="red"/>
-      <LineUpNumberColumnDesc column="classesVisitedNum" domain={[0, 1]} label="Variability"/>
-      <LineUpNumberColumnDesc column="frequency" domain={[0, 1]} label="Frequency"/>
-      <LineUpNumberColumnDesc column="score" domain={[0, 1]} label="Score"/>
+      <LineUpNumberColumnDesc column="distribution" label="Trinary Distribution"
+                              asArray={allEpochs.length}
+                              domain={[0, 1]}
+                              width={200}/>
+      <LineUpCategoricalColumnDesc column="distribution2" label="Prediction Distribution"
+                                   renderer="categoricalHeatmap"
+                                   asArray={allEpochs.length}
+                                   categories={labels}
+                                   width={200}/>
+      <LineUpCategoricalColumnDesc column="visitedLabels"
+                                   label="Visited Classes"
+                                   renderer="catheatmap"
+                                   asSet={true}
+                                   categories={labels}/>
+      <LineUpNumberColumnDesc column="variability"
+                              label="Variability"
+                              description="Number of visited classes"
+                              domain={[0, labels.length]}/>
+      <LineUpNumberColumnDesc column="frequencyRaw"
+                              label="Frequency"
+                              description="Number of changing predictions"
+                              domain={[0, 1]}/>
+      <LineUpNumberColumnDesc column="scoreRaw"
+                              label="Score"
+                              description="Incorrect classifications"
+                              domain={[0, 1]}/>
     </Taggle>;
   }
 }

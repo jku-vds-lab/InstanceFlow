@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var lineupjs_1 = require("lineupjs");
 require("./CategoricalArrayHeatmapCellRenderer.css");
 var GUESSED_HEIGHT = 20;
@@ -7,7 +7,7 @@ var CANVAS_HEIGHT = 20;
 // https://github.com/lineupjs/lineupjs/blob/790a0bbd36906539c27bae08ce517c27885ae56a/src/renderer/HeatmapCellRenderer.ts
 var CategoricalArrayHeatmapCellRenderer = /** @class */ (function () {
     function CategoricalArrayHeatmapCellRenderer() {
-        this.title = 'Distribution';
+        this.title = 'Distribution2';
     }
     CategoricalArrayHeatmapCellRenderer.prototype.canRender = function (col) {
         return lineupjs_1.isCategoricalColumn(col) && lineupjs_1.isArrayColumn(col) && Boolean(col.dataLength);
@@ -79,4 +79,4 @@ var CategoricalArrayHeatmapCellRenderer = /** @class */ (function () {
     };
     return CategoricalArrayHeatmapCellRenderer;
 }());
-exports["default"] = CategoricalArrayHeatmapCellRenderer;
+exports.default = CategoricalArrayHeatmapCellRenderer;

@@ -34,36 +34,43 @@ class InstanceListLineUpWrapper extends Component {
   }
 
   updateData() {
-    const {instances, epochs} = this.props;
-    const {classes, getLabel} = this.props.data;
-
+    const {instances, epochs, allEpochs} = this.props;
+    const {classes, getLabel, from, to} = this.props.data;
     this.data = instances
     //.filter(instance => instance.displayInList)
       .map((instance, i) => ({
-        ...instance, taggleIndex: i, label: getLabel(instance.actual), distribution: epochs.map(epoch => {
+        ...instance,
+        taggleIndex: i,
+        label: getLabel(instance.actual),
+        distribution: allEpochs.map(epoch => {
           // 0 if correct
           // 1 if other
           // 2 if incorrect (wrong and within selected classes)
           const prediction = epoch.classifications[instance.index].predicted;
           if (instance.actual === prediction) return 0;
-          if (classes.includes(prediction)) return 2;
-          return 1;
-        }), distribution2: epochs.map(epoch => {
+          if (classes.includes(prediction)) return 1;
+          return 0.5;
+        }),
+        distribution2: allEpochs.map(epoch => {
           return getLabel(epoch.classifications[instance.index].predicted);
-        })
+        }),
+        visitedLabels: Array.from(instance.classesVisited).map(i => getLabel(i)),
+        variability: instance.classesVisited.size,
       }));
-
-    if (this.taggle) {
-      this.taggle.adapter.data.setData(this.data);
-    }
+    this.taggleWrapper.updateData(this.data, from, to);
   }
 
   render() {
-    const {instances, epochs} = this.props;
+    const {instances, epochs, allEpochs} = this.props;
     const {raw_data} = this.props.data;
 
     return <div style={{fontSize: "10pt"}}>
-      <InstanceListLineUp key={raw_data.name} instances={instances} epochs={epochs} innerRef={(e) => this.taggle = e}/>
+      <InstanceListLineUp key={raw_data.name}
+                          instances={instances}
+                          epochs={epochs}
+                          allEpochs={allEpochs}
+                          ref={(e) => this.taggleWrapper = e}
+                          innerRef={(e) => this.taggle = e}/>
     </div>;
   }
 }

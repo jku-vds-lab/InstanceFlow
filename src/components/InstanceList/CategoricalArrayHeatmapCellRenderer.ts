@@ -16,7 +16,7 @@ const CANVAS_HEIGHT = 20;
 
 // https://github.com/lineupjs/lineupjs/blob/790a0bbd36906539c27bae08ce517c27885ae56a/src/renderer/HeatmapCellRenderer.ts
 export default class CategoricalArrayHeatmapCellRenderer implements ICellRendererFactory {
-    readonly title = 'Distribution';
+    readonly title = 'Distribution2';
 
     canRender(col: Column) {
         return isCategoricalColumn(col) && isArrayColumn(col) && Boolean(col.dataLength);
@@ -24,8 +24,9 @@ export default class CategoricalArrayHeatmapCellRenderer implements ICellRendere
 
     private createContext(col: ICategoricalColumn, context: IRenderContext, _hist: any, imposer?: IImposer) {
         const width = context.colWidth(col);
+
         const cellDimension = width / col.dataLength!;
-        const labels = col.labels;
+        const labels = col.labels!;
 
         const categories = col.categories.reduce((acc, cur) => {
             acc.set(cur.name, cur);

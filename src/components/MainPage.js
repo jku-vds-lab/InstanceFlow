@@ -42,7 +42,7 @@ class MainPage extends Component {
             <AllControls showEpochSelector={true}
                          showSortingSelector={true}
                          showOpacitySelector={true}
-                         showClassSelector={true}
+                         showClassSelector={false}
                          showClassViewSelector={true}
                          showInstanceFilterSelector={true}
                          showSankeyEnableCheckbox={true}
@@ -53,7 +53,7 @@ class MainPage extends Component {
           </Grid>
         </Grid>
         {hasData && <InstanceFlow instances={instances} epochs={epochs}/>}
-        {hasData && <InstanceListLineUpWrapper instances={instances} epochs={epochs}/>}
+        {hasData && <InstanceListLineUpWrapper instances={instances} allEpochs={raw_data.epochs} epochs={epochs}/>}
       </FlowDataProvider>
     </div>;
   }
