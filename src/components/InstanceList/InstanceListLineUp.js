@@ -25,8 +25,8 @@ class InstanceListLineUp extends Component {
       length: count,
       splice: v => v.slice(from, to + 1)
     };
-    distribution2Column.setSplicer(splicer);
-    distributionColumn.setSplicer(splicer);
+    if (distribution2Column) distribution2Column.setSplicer(splicer);
+    if (distributionColumn) distributionColumn.setSplicer(splicer);
 
 
     const scoreColumn = this.taggle.adapter.data.find((d) => d.desc.type === 'number' && d.desc.column === "scoreRaw");

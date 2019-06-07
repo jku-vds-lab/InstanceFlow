@@ -1,18 +1,86 @@
-.lu [data-renderer=catarrheatmap] {
+article.lu-side-panel-entry .lu-summary[data-renderer=catarrheatmap] {
+    margin-bottom: 2em;
+}
+
+.lu [data-agg=group] [data-renderer=catarrheatmap],
+.lu .lu-summary[data-renderer=catarrheatmap] {
     display: flex;
     flex-direction: row;
-    align-content: stretch;
-    align-items: flex-end;
 }
 
 .lu [data-agg=group] [data-renderer=catarrheatmap] > div,
-.lu-summary[data-renderer=catarrheatmap] > div {
-    margin: 0 1px;
-}
-
-.lu [data-renderer=catarrheatmap] div {
+.lu .lu-summary[data-renderer=catarrheatmap] > div {
     flex: 1 1 auto;
     position: relative;
+    margin: 0 1px;
+    font-size: x-small;
+}
+
+.lu [data-agg=group] [data-renderer=catarrheatmap] > div[data-filtered=filtered],
+.lu .lu-summary[data-renderer=catarrheatmap] > div[data-filtered=filtered] {
+    opacity: 0.2;
+}
+
+.lu [data-agg=group] [data-renderer=catarrheatmap] > div > div,
+.lu .lu-summary[data-renderer=catarrheatmap] > div > div {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 0;
+    width: 100%;
+}
+
+.lu [data-agg=group] [data-renderer=catarrheatmap] > div > .lu-selected,
+.lu .lu-summary[data-renderer=catarrheatmap] > div > .lu-selected {
+    background-color: #ffa500;
+}
+
+.lu [data-agg=group] [data-renderer=catarrheatmap][data-interactive] > div,
+.lu .lu-summary[data-renderer=catarrheatmap][data-interactive] > div {
+    cursor: pointer;
+}
+
+.lu [data-agg=group] [data-renderer=catarrheatmap] .lu-checkbox,
+.lu .lu-summary[data-renderer=catarrheatmap] .lu-checkbox {
+    position: absolute;
+    bottom: -5em;
+}
+
+.lu [data-agg=group] [data-renderer=catarrheatmap].lu-dense > div,
+.lu .lu-summary[data-renderer=catarrheatmap].lu-dense > div {
+    margin: 0;
+}
+
+.lu [data-agg=group] [data-renderer=catarrheatmap] > span,
+.lu .lu-summary[data-renderer=catarrheatmap] > span {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: absolute;
+    bottom: -15px;
+    pointer-events: none;
+    line-height: 100%;
+    /*
+       * create axis tick as background image and position it left or right
+       */
+    background-image: linear-gradient(to bottom, #000 3px, transparent);
+    background-repeat: no-repeat;
+    background-size: 1px 3px;
+    padding-top: 5px;
+}
+
+.lu [data-agg=group] [data-renderer=catarrheatmap] > span:first-of-type,
+.lu .lu-summary[data-renderer=catarrheatmap] > span:first-of-type {
+    left: 0;
+    background-position: left top;
+}
+
+.lu [data-agg=group] [data-renderer=catarrheatmap] > span:last-of-type,
+.lu .lu-summary[data-renderer=catarrheatmap] > span:last-of-type {
+    right: 0;
+    text-align: right;
+    background-position: right top;
 }
 
 .lu [data-renderer=catarrheatmap]:not(.lu-dense) > div[data-title]::before {

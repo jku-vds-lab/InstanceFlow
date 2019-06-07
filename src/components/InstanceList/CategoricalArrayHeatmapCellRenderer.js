@@ -44,26 +44,6 @@ var CategoricalArrayHeatmapCellRenderer = /** @class */ (function () {
             }; }
         };
     };
-    CategoricalArrayHeatmapCellRenderer.createHistogramContext = function (col, summary) {
-        var categories = col.categories;
-        var templateRows = '';
-        for (var _i = 0, categories_1 = categories; _i < categories_1.length; _i++) {
-            var cat = categories_1[_i];
-            templateRows += "<div title=\"" + cat.label + "\" data-title=\"" + (summary ? cat.label : "") + "\" style=\"background-color: " + cat.color + "\"></div>";
-        }
-        return {
-            templateRow: templateRows,
-            render: function (node, values) {
-                var max = Math.max.apply(Math, Object.values(values)) || 1;
-                Array.from(node.children).forEach(function (c, i) {
-                    var category = categories[i];
-                    var value = values[category.label] || 0;
-                    c.style.height = value / max * 100 + "%";
-                    c.title = category.label + ": " + value;
-                });
-            }
-        };
-    };
     CategoricalArrayHeatmapCellRenderer.prototype.create = function (col, context, _hist, imposer) {
         var _a = this.createContext(col, context, _hist, imposer), template = _a.template, render = _a.render, mover = _a.mover, width = _a.width;
         return {
@@ -86,34 +66,64 @@ var CategoricalArrayHeatmapCellRenderer = /** @class */ (function () {
             }
         };
     };
-    CategoricalArrayHeatmapCellRenderer.prototype.createGroup = function (col, context, _hist, imposer) {
-        var _a = CategoricalArrayHeatmapCellRenderer.createHistogramContext(col, false), templateRow = _a.templateRow, render = _a.render;
+    CategoricalArrayHeatmapCellRenderer.prototype.createGroup = function (col, _context, globalHist) {
+        var _this = this;
+        var _a = hist(col, false), template = _a.template, update = _a.update;
         return {
-            template: "<div>" + templateRow + "</div>",
-            update: function (node, group, rows) {
-                var values = rows.map(function (row) { return col.splicer.splice(row.v[col.desc.column]); }).flat().reduce(function (acc, curr) {
-                    acc[curr] = (acc[curr] || 0) + 1;
-                    return acc;
-                }, {});
-                render(node, values);
+            template: template + "</div>",
+            update: function (n, _group, rows) {
+                var _a = _this.computeHist(rows, col), maxBin = _a.maxBin, hist = _a.hist;
+                update(n, maxBin, hist);
             }
         };
     };
-    CategoricalArrayHeatmapCellRenderer.prototype.createSummary = function (col, context, interactive, imposer) {
-        var _a = CategoricalArrayHeatmapCellRenderer.createHistogramContext(col, !interactive), templateRow = _a.templateRow, render = _a.render;
+    CategoricalArrayHeatmapCellRenderer.prototype.createSummary = function (col, ctx, interactive) {
+        var _this = this;
+        var _a = hist(col, interactive), template = _a.template, update = _a.update;
         return {
-            template: "<div>" + templateRow + "</div>",
-            update: function (node, hist) {
-                var ranking = context.provider.getRankings()[0];
-                var rows = context.provider.view(ranking.getOrder());
-                var values = rows.map(function (row) { return col.splicer.splice(row[col.desc.column]); }).flat().reduce(function (acc, curr) {
-                    acc[curr] = (acc[curr] || 0) + 1;
-                    return acc;
-                }, {});
-                render(node, values);
+            template: template + "</div>",
+            update: function (n, hist2) {
+                // Manually compute histogram
+                var ranking = ctx.provider.getRankings()[0];
+                var rows = ctx.provider.viewRawRows(ranking.getOrder());
+                var _a = _this.computeHist(rows, col), maxBin = _a.maxBin, hist = _a.hist;
+                n.classList.toggle('lu-missing', !hist);
+                if (!hist) {
+                    return;
+                }
+                update(n, maxBin, hist);
             }
+        };
+    };
+    CategoricalArrayHeatmapCellRenderer.prototype.computeHist = function (rows, col) {
+        var values = rows
+            .map(function (row) { return col.getSplicer().splice(row.v[col.desc.column]); })
+            .flat()
+            .reduce(function (acc, curr) {
+            acc[curr] = (acc[curr] || 0) + 1;
+            return acc;
+        }, {});
+        return {
+            maxBin: Math.max.apply(Math, Object.values(values)),
+            hist: col.categories.map(function (cat) { return ({ cat: cat.name, y: values[cat.name] | 0 }); }),
+            missing: 0
         };
     };
     return CategoricalArrayHeatmapCellRenderer;
 }());
 exports.default = CategoricalArrayHeatmapCellRenderer;
+// TODO: Reuse from CategoricalColumn
+function hist(col, showLabels) {
+    var bins = col.categories.map(function (c) { return "<div title=\"" + c.label + ": 0\" data-cat=\"" + c.name + "\" " + (showLabels ? "data-title=\"" + c.label + "\"" : '') + "><div style=\"height: 0; background-color: " + c.color + "\"></div></div>"; }).join('');
+    return {
+        template: "<div" + (col.dataLength > lineupjs_1.DENSE_HISTOGRAM ? 'class="lu-dense"' : '') + ">" + bins,
+        update: function (node, maxBin, hist) {
+            Array.from(node.querySelectorAll('[data-cat]')).forEach(function (d, i) {
+                var y = hist[i].y;
+                d.title = col.categories[i].label + ": " + y;
+                var inner = d.firstElementChild;
+                inner.style.height = Math.round(y * 100 / maxBin) + "%";
+            });
+        }
+    };
+}

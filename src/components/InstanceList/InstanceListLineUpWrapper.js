@@ -47,8 +47,8 @@ class InstanceListLineUpWrapper extends Component {
           // 2 if incorrect (wrong and within selected classes)
           const prediction = epoch.classifications[instance.index].predicted;
           if (instance.actual === prediction) return "Correct";
-          if (classes.includes(prediction)) return "Incorrect";
-          return "Other";
+          //if (!classes.includes(prediction)) return "Other";
+          return "Incorrect";
         }),
         distribution2: allEpochs.map(epoch => {
           return getLabel(epoch.classifications[instance.index].predicted);
