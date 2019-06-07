@@ -11,7 +11,7 @@ import {
     isArrayColumn,
     DENSE_HISTOGRAM,
     ICategoricalBin,
-    CategoricalsColumn,
+    CategoricalsColumn, LocalDataProvider,
 } from 'lineupjs';
 import "./CategoricalArrayHeatmapCellRenderer.css";
 
@@ -103,7 +103,7 @@ export default class CategoricalArrayHeatmapCellRenderer implements ICellRendere
             update: (n: HTMLElement, hist2: ICategoricalStatistics | null) => {
                 // Manually compute histogram
                 const ranking = ctx.provider.getRankings()[0];
-                const rows = ctx.provider.viewRawRows(ranking.getOrder());
+                const rows = (<LocalDataProvider>ctx.provider).viewRawRows(ranking.getOrder());
                 const {maxBin, hist} = this.computeHist(rows, col);
 
                 n.classList.toggle('lu-missing', !hist);
