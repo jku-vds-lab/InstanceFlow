@@ -7,10 +7,12 @@ var CANVAS_HEIGHT = 20;
 // https://github.com/lineupjs/lineupjs/blob/790a0bbd36906539c27bae08ce517c27885ae56a/src/renderer/HeatmapCellRenderer.ts
 var CategoricalArrayHeatmapCellRenderer = /** @class */ (function () {
     function CategoricalArrayHeatmapCellRenderer() {
-        this.title = 'Distribution2';
+        this.title = 'Categorical Heatmap';
+        this.groupTitle = 'Categorical Histogram';
+        this.summaryTitle = 'Categorical Histogram';
     }
-    CategoricalArrayHeatmapCellRenderer.prototype.canRender = function (col) {
-        return lineupjs_1.isCategoricalColumn(col) && lineupjs_1.isArrayColumn(col) && Boolean(col.dataLength);
+    CategoricalArrayHeatmapCellRenderer.prototype.canRender = function (col, mode) {
+        return lineupjs_1.isArrayColumn(col) && Boolean(col.dataLength) && col.desc.type === "categoricals";
     };
     CategoricalArrayHeatmapCellRenderer.prototype.createContext = function (col, context, _hist, imposer) {
         var width = context.colWidth(col);
@@ -42,6 +44,26 @@ var CategoricalArrayHeatmapCellRenderer = /** @class */ (function () {
             }; }
         };
     };
+    CategoricalArrayHeatmapCellRenderer.createHistogramContext = function (col, summary) {
+        var categories = col.categories;
+        var templateRows = '';
+        for (var _i = 0, categories_1 = categories; _i < categories_1.length; _i++) {
+            var cat = categories_1[_i];
+            templateRows += "<div title=\"" + cat.label + "\" data-title=\"" + (summary ? cat.label : "") + "\" style=\"background-color: " + cat.color + "\"></div>";
+        }
+        return {
+            templateRow: templateRows,
+            render: function (node, values) {
+                var max = Math.max.apply(Math, Object.values(values)) || 1;
+                Array.from(node.children).forEach(function (c, i) {
+                    var category = categories[i];
+                    var value = values[category.label] || 0;
+                    c.style.height = value / max * 100 + "%";
+                    c.title = category.label + ": " + value;
+                });
+            }
+        };
+    };
     CategoricalArrayHeatmapCellRenderer.prototype.create = function (col, context, _hist, imposer) {
         var _a = this.createContext(col, context, _hist, imposer), template = _a.template, render = _a.render, mover = _a.mover, width = _a.width;
         return {
@@ -59,21 +81,36 @@ var CategoricalArrayHeatmapCellRenderer = /** @class */ (function () {
                 render(ctx, values, d, GUESSED_HEIGHT);
             },
             render: function (ctx, d) {
-                render(ctx, col.getValues(d), d, CANVAS_HEIGHT);
+                var values = col.getValues(d);
+                render(ctx, values, d, CANVAS_HEIGHT);
             }
         };
     };
     CategoricalArrayHeatmapCellRenderer.prototype.createGroup = function (col, context, _hist, imposer) {
+        var _a = CategoricalArrayHeatmapCellRenderer.createHistogramContext(col, false), templateRow = _a.templateRow, render = _a.render;
         return {
-            template: "<div></div>",
-            update: function (node) {
+            template: "<div>" + templateRow + "</div>",
+            update: function (node, group, rows) {
+                var values = rows.map(function (row) { return col.splicer.splice(row.v[col.desc.column]); }).flat().reduce(function (acc, curr) {
+                    acc[curr] = (acc[curr] || 0) + 1;
+                    return acc;
+                }, {});
+                render(node, values);
             }
         };
     };
-    CategoricalArrayHeatmapCellRenderer.prototype.createSummary = function (col) {
+    CategoricalArrayHeatmapCellRenderer.prototype.createSummary = function (col, context, interactive, imposer) {
+        var _a = CategoricalArrayHeatmapCellRenderer.createHistogramContext(col, !interactive), templateRow = _a.templateRow, render = _a.render;
         return {
-            template: "<div></div>",
-            update: function (node) {
+            template: "<div>" + templateRow + "</div>",
+            update: function (node, hist) {
+                var ranking = context.provider.getRankings()[0];
+                var rows = context.provider.view(ranking.getOrder());
+                var values = rows.map(function (row) { return col.splicer.splice(row[col.desc.column]); }).flat().reduce(function (acc, curr) {
+                    acc[curr] = (acc[curr] || 0) + 1;
+                    return acc;
+                }, {});
+                render(node, values);
             }
         };
     };

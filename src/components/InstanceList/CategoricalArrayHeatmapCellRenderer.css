@@ -1,11 +1,28 @@
-.lu [data-renderer=distribution] {
+.lu [data-renderer=catarrheatmap] {
     display: flex;
     flex-direction: row;
     align-content: stretch;
-    align-items: stretch;
+    align-items: flex-end;
 }
 
-.lu [data-renderer=distribution] div {
+.lu [data-agg=group] [data-renderer=catarrheatmap] > div,
+.lu-summary[data-renderer=catarrheatmap] > div {
+    margin: 0 1px;
+}
+
+.lu [data-renderer=catarrheatmap] div {
     flex: 1 1 auto;
     position: relative;
+}
+
+.lu [data-renderer=catarrheatmap]:not(.lu-dense) > div[data-title]::before {
+    content: attr(data-title);
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
 }

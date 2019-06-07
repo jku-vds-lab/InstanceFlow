@@ -98,14 +98,27 @@ class InstanceListLineUp extends Component {
       <LineUpStringColumnDesc column="image" renderer="image" groupRenderer="image" summaryRenderer="image"
                               pattern="${escapedValue}" width={50}/>
       <LineUpCategoricalColumnDesc column="label" categories={labels}/>
-      <LineUpNumberColumnDesc column="distribution" label="Trinary Distribution"
-                              asArray={allEpochs.length}
-                              groupRenderer="histogram"
-                              domain={[0, 1]}
-                              width={200}/>
+      <LineUpCategoricalColumnDesc column="distribution" label="Trinary Distribution"
+                                   renderer="catarrheatmap"
+                                   groupRenderer="catarrheatmap"
+                                   summaryRenderer="catarrheatmap"
+                                   asArray={allEpochs.length}
+                                   categories={[{
+                                     name: "Correct",
+                                     color: "lightgray"
+                                   }, {
+                                     name: "Other",
+                                     color: "gray"
+                                   }, {
+                                     name: "Incorrect",
+                                     color: "black"
+                                   }
+                                   ]}
+                                   width={200}/>
       <LineUpCategoricalColumnDesc column="distribution2" label="Prediction Distribution"
                                    renderer="catarrheatmap"
-                                   groupRenderer="catheatmap"
+                                   groupRenderer="catarrheatmap"
+                                   summaryRenderer="catarrheatmap"
                                    asArray={allEpochs.length}
                                    categories={labels}
                                    width={200}/>
