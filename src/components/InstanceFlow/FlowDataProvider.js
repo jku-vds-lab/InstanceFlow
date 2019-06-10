@@ -53,7 +53,7 @@ const FlowDataProvider = (props) => {
 
 const FlowDataConsumer = FlowDataContext.Consumer;
 
-export {FlowDataProvider, FlowDataConsumer}
+export {FlowDataProvider, FlowDataConsumer, FlowDataContext}
 
 export function withFlowData(MyComponent) {
   class WithFlowData extends React.Component {

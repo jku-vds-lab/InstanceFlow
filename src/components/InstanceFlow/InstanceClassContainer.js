@@ -1,31 +1,30 @@
-import React, {Component} from "react";
+import React, {Component, useContext, useEffect, useRef} from "react";
 import {withData} from "../DataProvider";
 import "./InstanceClassContainer.css"
 import InstanceClassBarChart from "./InstanceClassBarChart";
-import {withFlowData} from "./FlowDataProvider";
+import {FlowDataContext} from "./FlowDataProvider";
 import InstanceClassInstances from "./InstanceClassBars";
 
-class InstanceClassContainer extends Component {
-  set = false;
+function InstanceClassContainer(props) {
+  const ref = useRef(null);
+  const flowData = useContext(FlowDataContext);
 
-  render() {
-    const {instances, clazz, order, epoch} = this.props;
-    const {classes: classesWithoutOther} = this.props.data;
-    const {classView, updateContainerElements} = this.props.flowData;
-    if (!epoch.stats[clazz]) return null;
-    const {getColor} = this.props.data;
-    return <div className="instance-class-container"
-                style={{borderColor: getColor(clazz), order: order}}
-                ref={e => {
-                  if(e && !this.set) {
-                    this.set = true;
-                    updateContainerElements(clazz, epoch.id, e);
-                  }
-                }}>
-      {classView === "overview" && <InstanceClassBarChart stats={epoch.stats[clazz]} classes={classesWithoutOther}/>}
-      {classView === "instances" && <InstanceClassInstances instances={instances} epoch={epoch} clazz={clazz} />}
-    </div>;
-  }
+  const {instances, clazz, order, epoch} = props;
+  const {classes: classesWithoutOther} = props.data;
+  const {classView, updateContainerElements} = flowData;
+
+  useEffect(() => {
+    updateContainerElements(clazz, epoch.id, ref.current);
+  }, [ref.current]);
+
+  if (!epoch.stats[clazz]) return null;
+  const {getColor} = props.data;
+  return <div className="instance-class-container"
+              style={{borderColor: getColor(clazz), order: order}}
+              ref={ref}>
+    {classView === "overview" && <InstanceClassBarChart stats={epoch.stats[clazz]} classes={classesWithoutOther}/>}
+    {classView === "instances" && <InstanceClassInstances instances={instances} epoch={epoch} clazz={clazz}/>}
+  </div>;
 }
 
-export default withData(withFlowData(InstanceClassContainer));
+export default withData(InstanceClassContainer);

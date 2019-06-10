@@ -1,62 +1,49 @@
-import React, {Component} from "react";
+import React, {useContext, useEffect, useRef} from "react";
 import SimpleBox from "./SimpleBox";
 import {withData} from "../DataProvider";
-import {withFlowData} from "../InstanceFlow/FlowDataProvider";
+import {FlowDataContext} from "../InstanceFlow/FlowDataProvider";
 
-class InstanceBox extends Component {
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    return true;
-    //return this.props.instance !== nextProps.instance ||
-    //  this.props.instance.active !== nextProps.instance.active ||
-    //  this.props.instance.line !== nextProps.instance.line ||
-    //  this.props.instance.clicked !== nextProps.instance.clicked ||
-    //  this.props.classification !== nextProps.classification ||
-    //  this.props.flowData.opacityMetric !== nextProps.flowData.opacityMetric ||
-    //  this.props.flowData.sortMetric !== nextProps.flowData.sortMetric;
-  }
+function InstanceBox(props) {
+  const ref = useRef(null);
+  const flowData = useContext(FlowDataContext);
 
-  refCallback = element => {
-    if (element) {
-      this.props.flowData.updateBoxElements(this.props.instance.id, this.props.epoch.id, element);
+  const {instance, classification, style} = props;
+  const {getColor, getLabel, deactivateInstances, activateInstances} = props.data;
+  const {opacityMetric} = flowData;
+
+  useEffect(() => {
+    flowData.updateBoxElements(props.instance.id, props.epoch.id, ref.current);
+    return () => {
+      flowData.updateBoxElements(props.instance.id, props.epoch.id, null);
     }
-  };
+  }, [ref.current]);
 
-  componentWillUnmount() {
-    this.props.flowData.updateBoxElements(this.props.instance.id, this.props.epoch.id, null);
-  }
+  const {active, clicked} = instance;
 
-  render() {
-    const {instance, classification, style} = this.props;
-    const {getColor, getLabel, deactivateInstances, activateInstances} = this.props.data;
-    const {opacityMetric} = this.props.flowData;
-
-    const {active, clicked} = instance;
-
-    if (!instance) return null;
-    return <SimpleBox type={classification.type}
-                      color={active ? "gold" : getColor(instance.actual)}
-                      opacity={active ? 1.0 : (instance[opacityMetric] === undefined ? 1.0 : Math.max(instance[opacityMetric], 0.1))}
-                      tooltipText={`${getLabel(instance.actual)} as ${getLabel(classification.predicted)}`}
-                      style={style}
-                      id={instance.id}
-                      refCallback={this.refCallback}
-                      onMouseOver={e => {
-                        if (!clicked)
-                          activateInstances({active: true, lines: true}, instance)
-                      }}
-                      onMouseOut={e => {
-                        if (!clicked)
-                          deactivateInstances(false, instance);
-                      }}
-                      onClick={e => {
-                        if (!clicked) {
-                          activateInstances({active: true, clicked: true, lines: true}, instance);
-                        } else {
-                          activateInstances({active: false, clicked: false, lines: false}, instance);
-                        }
-                      }}
-    />;
-  }
+  if (!instance) return null;
+  return <SimpleBox type={classification.type}
+                    color={active ? "gold" : getColor(instance.actual)}
+                    opacity={active ? 1.0 : (instance[opacityMetric] === undefined ? 1.0 : Math.max(instance[opacityMetric], 0.1))}
+                    tooltipText={`${getLabel(instance.actual)} as ${getLabel(classification.predicted)}`}
+                    style={style}
+                    id={instance.id}
+                    refCallback={ref}
+                    onMouseOver={e => {
+                      if (!clicked)
+                        activateInstances({active: true, lines: true}, instance)
+                    }}
+                    onMouseOut={e => {
+                      if (!clicked)
+                        deactivateInstances(false, instance);
+                    }}
+                    onClick={e => {
+                      if (!clicked) {
+                        activateInstances({active: true, clicked: true, lines: true}, instance);
+                      } else {
+                        activateInstances({active: false, clicked: false, lines: false}, instance);
+                      }
+                    }}
+  />;
 }
 
-export default withData(withFlowData(InstanceBox));
+export default withData(InstanceBox);
