@@ -1,72 +1,46 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var lineupjs_1 = require("lineupjs");
-require("./CategoricalArrayHeatmapCellRenderer.css");
-var GUESSED_HEIGHT = 20;
+require("./CategoricalArrayHistogramRenderer.css");
 var CANVAS_HEIGHT = 20;
 // https://github.com/lineupjs/lineupjs/blob/790a0bbd36906539c27bae08ce517c27885ae56a/src/renderer/HeatmapCellRenderer.ts
-var CategoricalArrayHeatmapCellRenderer = /** @class */ (function () {
-    function CategoricalArrayHeatmapCellRenderer() {
-        this.title = 'Categorical Heatmap';
+var CategoricalArrayHistogramRenderer = /** @class */ (function () {
+    function CategoricalArrayHistogramRenderer() {
+        this.title = 'Categorical Histogram';
         this.groupTitle = 'Categorical Histogram';
         this.summaryTitle = 'Categorical Histogram';
     }
-    CategoricalArrayHeatmapCellRenderer.prototype.canRender = function (col, mode) {
+    CategoricalArrayHistogramRenderer.prototype.canRender = function (col, mode) {
         return lineupjs_1.isArrayColumn(col) && Boolean(col.dataLength) && col.desc.type === "categoricals";
     };
-    CategoricalArrayHeatmapCellRenderer.prototype.createContext = function (col, context, _hist, imposer) {
-        var width = context.colWidth(col);
-        var cellDimension = width / col.dataLength;
-        var labels = col.labels;
-        var categories = col.categories.reduce(function (acc, cur) {
-            acc.set(cur.name, cur);
-            return acc;
-        }, new Map());
-        var render = function (ctx, data, item, height) {
-            data.forEach(function (d, j) {
-                var x = j * cellDimension;
-                if (lineupjs_1.isMissingValue(d)) {
-                    //renderMissingValue(ctx, cellDimension, height, x, 0);
-                    return;
-                }
-                ctx.fillStyle = categories.get(d).color;
-                ctx.fillRect(x, 0, cellDimension, height);
-            });
-        };
-        return {
-            template: "<canvas height=\"" + GUESSED_HEIGHT + "\" title=\"\" />",
-            render: render,
-            width: width,
-            mover: function (n, values) { return function (evt) {
-                var percent = evt.offsetX / width;
-                var index = Math.max(0, Math.min(col.dataLength - 1, Math.floor(percent * (col.dataLength - 1) + 0.5)));
-                n.title = labels[index] + ": " + values[index];
-            }; }
-        };
-    };
-    CategoricalArrayHeatmapCellRenderer.prototype.create = function (col, context, _hist, imposer) {
-        var _a = this.createContext(col, context, _hist, imposer), template = _a.template, render = _a.render, mover = _a.mover, width = _a.width;
+    CategoricalArrayHistogramRenderer.prototype.create = function (col, context, _hist, imposer) {
+        var _this = this;
+        var _a = hist(col, false), template = _a.template, update = _a.update;
         return {
             template: template,
-            update: function (n, d) {
-                var ctx = n.getContext('2d');
-                ctx.canvas.width = width;
-                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                //if (renderMissingDOM(n, col, d)) {
-                //    return;
-                //}
-                var values = col.getValues(d);
-                n.onmousemove = mover(n, values);
-                n.onmouseleave = function () { return n.title = ''; };
-                render(ctx, values, d, GUESSED_HEIGHT);
+            update: function (n, row) {
+                var _a = _this.computeHist([row], col), maxBin = _a.maxBin, hist = _a.hist;
+                update(n, maxBin, hist);
             },
-            render: function (ctx, d) {
-                var values = col.getValues(d);
-                render(ctx, values, d, CANVAS_HEIGHT);
+            render: function (ctx, row) {
+                var width = context.colWidth(col);
+                var cats = col.categories;
+                if (lineupjs_1.renderMissingCanvas(ctx, col, row, width)) {
+                    return;
+                }
+                var cellDimension = width / cats.length;
+                var _a = _this.computeHist([row], col), maxBin = _a.maxBin, hist = _a.hist;
+                ctx.save();
+                cats.forEach(function (d, j) {
+                    var posx = (j * cellDimension);
+                    ctx.fillStyle = d.color;
+                    ctx.fillRect(posx, 0, cellDimension, CANVAS_HEIGHT * (hist[j].y / maxBin));
+                });
+                ctx.restore();
             }
         };
     };
-    CategoricalArrayHeatmapCellRenderer.prototype.createGroup = function (col, _context, globalHist) {
+    CategoricalArrayHistogramRenderer.prototype.createGroup = function (col, _context, globalHist) {
         var _this = this;
         var _a = hist(col, false), template = _a.template, update = _a.update;
         return {
@@ -77,7 +51,7 @@ var CategoricalArrayHeatmapCellRenderer = /** @class */ (function () {
             }
         };
     };
-    CategoricalArrayHeatmapCellRenderer.prototype.createSummary = function (col, ctx, interactive) {
+    CategoricalArrayHistogramRenderer.prototype.createSummary = function (col, ctx, interactive) {
         var _this = this;
         var _a = hist(col, interactive), template = _a.template, update = _a.update;
         return {
@@ -95,7 +69,7 @@ var CategoricalArrayHeatmapCellRenderer = /** @class */ (function () {
             }
         };
     };
-    CategoricalArrayHeatmapCellRenderer.prototype.computeHist = function (rows, col) {
+    CategoricalArrayHistogramRenderer.prototype.computeHist = function (rows, col) {
         var values = rows
             .map(function (row) { return col.getSplicer().splice(row.v[col.desc.column]); })
             .flat()
@@ -109,9 +83,9 @@ var CategoricalArrayHeatmapCellRenderer = /** @class */ (function () {
             missing: 0
         };
     };
-    return CategoricalArrayHeatmapCellRenderer;
+    return CategoricalArrayHistogramRenderer;
 }());
-exports.default = CategoricalArrayHeatmapCellRenderer;
+exports.default = CategoricalArrayHistogramRenderer;
 // TODO: Reuse from CategoricalColumn
 function hist(col, showLabels) {
     var bins = col.categories.map(function (c) { return "<div title=\"" + c.label + ": 0\" data-cat=\"" + c.name + "\" " + (showLabels ? "data-title=\"" + c.label + "\"" : '') + "><div style=\"height: 0; background-color: " + c.color + "\"></div></div>"; }).join('');

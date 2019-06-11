@@ -5,9 +5,10 @@ import {
   LineUpNumberColumnDesc,
   LineUpStringColumnDesc, Taggle,
 } from "lineupjsx";
-import CategoricalArrayHeatmapCellRenderer from "./CategoricalArrayHeatmapCellRenderer";
+import CategoricalArrayHeatmapRenderer from "./CategoricalArrayHeatmapRenderer";
 import {ScaleMappingFunction} from "lineupjs";
 import {arraysEqual} from "../utils";
+import CategoricalArrayHistogramRenderer from "./CategoricalArrayHistogramRenderer";
 
 class InstanceListLineUp extends Component {
   shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -89,7 +90,10 @@ class InstanceListLineUp extends Component {
   render() {
     const {allEpochs, innerRef} = this.props;
     const {labels, deactivateAllInstances, activateInstances} = this.props.data;
-    return <Taggle data={[]} renderers={{catarrheatmap: new CategoricalArrayHeatmapCellRenderer()}}
+    return <Taggle data={[]} renderers={{
+      catarrheatmap: new CategoricalArrayHeatmapRenderer(),
+      catarrhistogram: new CategoricalArrayHistogramRenderer()
+    }}
                    ref={e => {
                      this.taggle = e;
                      innerRef(this.taggle);
@@ -105,9 +109,9 @@ class InstanceListLineUp extends Component {
                               pattern="${escapedValue}" width={50}/>
       <LineUpCategoricalColumnDesc column="label" categories={labels}/>
       <LineUpCategoricalColumnDesc column="distribution" label="Trinary Distribution"
-                                   renderer="catarrheatmap"
-                                   groupRenderer="catarrheatmap"
-                                   summaryRenderer="catarrheatmap"
+                                   renderer="catarrhistogram"
+                                   groupRenderer="catarrhistogram"
+                                   summaryRenderer="catarrhistogram"
                                    asArray={allEpochs.length}
                                    categories={[{
                                      name: "Correct",
@@ -123,8 +127,8 @@ class InstanceListLineUp extends Component {
                                    width={200}/>
       <LineUpCategoricalColumnDesc column="distribution2" label="Prediction Distribution"
                                    renderer="catarrheatmap"
-                                   groupRenderer="catarrheatmap"
-                                   summaryRenderer="catarrheatmap"
+                                   groupRenderer="catarrhistogram"
+                                   summaryRenderer="catarrhistogram"
                                    asArray={allEpochs.length}
                                    categories={labels}
                                    width={200}/>
