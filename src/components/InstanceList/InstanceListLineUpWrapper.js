@@ -7,6 +7,7 @@ class InstanceListLineUpWrapper extends Component {
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
     return this.props.data.raw_data.name !== nextProps.data.raw_data.name ||
+      this.props.data.classes !== nextProps.data.classes ||
       ((this.props.instances.length > 0 && nextProps.instances.length > 0)
       && (JSON.stringify(this.props.instances[0]) !== JSON.stringify(nextProps.instances[0]))) ||
       this.props.epochs.length !== nextProps.epochs.length ||
@@ -33,7 +34,7 @@ class InstanceListLineUpWrapper extends Component {
   }
 
   updateData() {
-    const {instances, epochs, allEpochs} = this.props;
+    const {instances, allEpochs} = this.props;
     const {classes, getLabel, from, to} = this.props.data;
     this.data = instances
     //.filter(instance => instance.displayInList)
@@ -47,7 +48,7 @@ class InstanceListLineUpWrapper extends Component {
           // 2 if incorrect (wrong and within selected classes)
           const prediction = epoch.classifications[instance.index].predicted;
           if (instance.actual === prediction) return "Correct";
-          //if (!classes.includes(prediction)) return "Other";
+          if (!classes.includes(prediction)) return "Other";
           return "Incorrect";
         }),
         distribution2: allEpochs.map(epoch => {
@@ -56,7 +57,7 @@ class InstanceListLineUpWrapper extends Component {
         visitedLabels: Array.from(instance.classesVisited).map(i => getLabel(i)),
         variability: instance.classesVisited.size,
       }));
-    this.taggleWrapper.updateData(this.data, from, to);
+    this.taggleWrapper.updateData(this.data, from, to, classes);
   }
 
   render() {

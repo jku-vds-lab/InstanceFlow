@@ -7,6 +7,7 @@ import {
 } from "lineupjsx";
 import CategoricalArrayHeatmapCellRenderer from "./CategoricalArrayHeatmapCellRenderer";
 import {ScaleMappingFunction} from "lineupjs";
+import {arraysEqual} from "../utils";
 
 class InstanceListLineUp extends Component {
   shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -17,9 +18,11 @@ class InstanceListLineUp extends Component {
     this.initializeTaggleEvents();
   }
 
-  updateData(data, from, to) {
+  updateData(data, from, to, classes) {
     const distribution2Column = this.taggle.adapter.data.find((d) => d.desc.column === "distribution2");
     const distributionColumn = this.taggle.adapter.data.find((d) => d.desc.column === "distribution");
+    const labelColumn = this.taggle.adapter.data.find((d) => d.desc.type === 'categorical' && d.desc.column === "label");
+
     const count = to - from + 1;
     const splicer = {
       length: count,
@@ -27,7 +30,6 @@ class InstanceListLineUp extends Component {
     };
     if (distribution2Column) distribution2Column.setSplicer(splicer);
     if (distributionColumn) distributionColumn.setSplicer(splicer);
-
 
     const scoreColumn = this.taggle.adapter.data.find((d) => d.desc.type === 'number' && d.desc.column === "scoreRaw");
     if (scoreColumn) {
@@ -38,12 +40,32 @@ class InstanceListLineUp extends Component {
     if (frequencyColumn) {
       frequencyColumn.setMapping(new ScaleMappingFunction([0, count - 1], 'linear'));
     }
+
+    const {labels, activateInstances, setVisibleInstances, setClasses} = this.props.data;
+    // This callback serves as indicator that a filter has changed (TODO: Better callback possible?)
+    // Override it on every data change because otherwise the callbacks store "old" values
+    this.taggle.adapter.data.on("orderChanged", () => {
+      if (labelColumn) {
+        const filteredLabels = labelColumn.getFilter().filter;
+        const filteredLabelIndices = filteredLabels.map(label => labels.indexOf(label)).filter(index => index >= 0).sort();
+        if (!arraysEqual(classes, filteredLabelIndices)) {
+          setClasses(filteredLabelIndices);
+        }
+      }
+
+      // Update visibility of instances
+      const data = this.taggle.adapter.data;
+      const ranking = data.getRankings()[0];
+      const visibleInstances = data.view(ranking.getOrder());
+      setVisibleInstances(new Set());
+      activateInstances({visible: true}, ...visibleInstances);
+    });
     this.taggle.adapter.data.setData(data);
   }
 
   initializeTaggleEvents = () => {
     if (this.taggle) {
-      const {labels, classes, activateInstances, setVisibleInstances, setClasses, setColors, getLabel} = this.props.data;
+      const {classes, setColors, getLabel} = this.props.data;
 
       const labelColumn = this.taggle.adapter.data.find((d) => d.desc.type === 'categorical' && d.desc.column === "label");
       if (labelColumn) {
@@ -61,22 +83,6 @@ class InstanceListLineUp extends Component {
           min: 1
         });
       }
-
-      // This callback serves as indicator that a filter has changed (TODO: Better callback possible?)
-      this.taggle.adapter.data.on("orderChanged", () => {
-        if (labelColumn) {
-          const filteredLabels = labelColumn.getFilter().filter;
-          const filteredLabelIndices = filteredLabels.map(label => labels.indexOf(label)).filter(index => index >= 0).sort();
-          setClasses(filteredLabelIndices);
-        }
-
-        // Update visibility of instances
-        const data = this.taggle.adapter.data;
-        const ranking = data.getRankings()[0];
-        const visibleInstances = data.view(ranking.getOrder());
-        setVisibleInstances(new Set());
-        activateInstances({visible: true}, ...visibleInstances);
-      });
     }
   };
 

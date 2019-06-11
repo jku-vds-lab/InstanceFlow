@@ -1,5 +1,6 @@
 import React, {useState, createContext, useEffect} from "react";
 import ReactTooltip from "react-tooltip";
+import {arraysEqual} from "./utils";
 
 const DataContext = createContext({});
 
@@ -312,6 +313,10 @@ const DataProvider = (props) => {
 
   const getColor = (index) => {
     return colors[index];
+  };
+
+  const getClasses = () => {
+    return classes;
   };
 
   return (
