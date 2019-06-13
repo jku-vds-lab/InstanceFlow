@@ -84,10 +84,11 @@ export default class CategoricalArrayHistogramRenderer implements ICellRendererF
     }
 
     computeHist(rows: IDataRow[], col: CategoricalsColumn): ICategoricalStatistics {
-        const values = <{ string: number }>rows
-            .map(row => col.getSplicer().splice(row.v[col.desc.column]))
+        const values = <{ [key: string]: number }>rows
+            // @ts-ignore
+            .map(row => <string[]>col.getSplicer().splice(row.v[col.desc.column]))
             .flat()
-            .reduce((acc, curr) => {
+            .reduce((acc: { [key: string]: number }, curr: string) => {
                 acc[curr] = (acc[curr] || 0) + 1;
                 return acc;
             }, {});
@@ -107,6 +108,7 @@ function hist(col: CategoricalsColumn, showLabels: boolean) {
     return {
         template: `<div${col.dataLength! > DENSE_HISTOGRAM ? 'class="lu-dense"' : ''}>${bins}`, // no closing div to be able to append things
         update: (node: HTMLElement, maxBin: number, hist: ICategoricalBin[]) => {
+            // @ts-ignore
             Array.from(node.querySelectorAll('[data-cat]')).forEach((d: HTMLElement, i) => {
                 const {y} = hist[i];
                 d.title = `${col.categories[i].label}: ${y}`;
